@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TypeFun - Learn Letters!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', 'Chalkboard', 'Marker Felt', cursive;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 3rem;
+            color: white;
+            text-shadow: 3px 3px 0 #ff6b6b, 6px 6px 0 #4ecdc4;
+            margin-bottom: 10px;
+        }
+
+        .instruction {
+            font-size: 1.5rem;
+            color: #fff3cd;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .typing-area {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 30px;
+            padding: 40px;
+            min-width: 80vw;
+            min-height: 300px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            position: relative;
+        }
+
+        .letter {
+            font-size: 8rem;
+            font-weight: bold;
+            display: inline-block;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        .letter:hover {
+            transform: scale(1.1);
+        }
+
+        /* Different animations for letters */
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-30px) rotate(-5deg); }
+            50% { transform: translateY(0) rotate(0deg); }
+            75% { transform: translateY(-15px) rotate(5deg); }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg) scale(1); }
+            25% { transform: rotate(90deg) scale(1.2); }
+            50% { transform: rotate(180deg) scale(1); }
+            75% { transform: rotate(270deg) scale(1.2); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(-10deg); }
+            25% { transform: rotate(10deg); }
+            50% { transform: rotate(-10deg); }
+            75% { transform: rotate(10deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-20px); }
+            50% { transform: translateX(20px); }
+            75% { transform: translateX(-10px); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            33% { transform: translateY(-20px) rotate(5deg); }
+            66% { transform: translateY(-10px) rotate(-5deg); }
+        }
+
+        @keyframes jello {
+            0%, 100% { transform: skewX(0deg) skewY(0deg); }
+            25% { transform: skewX(-10deg) skewY(-5deg); }
+            50% { transform: skewX(10deg) skewY(5deg); }
+            75% { transform: skewX(-5deg) skewY(-2deg); }
+        }
+
+        @keyframes swing {
+            0%, 100% { transform: rotate(0deg); transform-origin: top center; }
+            25% { transform: rotate(15deg); }
+            50% { transform: rotate(-15deg); }
+            75% { transform: rotate(10deg); }
+        }
+
+        @keyframes rubberBand {
+            0% { transform: scale(1, 1); }
+            30% { transform: scale(1.25, 0.75); }
+            40% { transform: scale(0.75, 1.25); }
+            50% { transform: scale(1.15, 0.85); }
+            65% { transform: scale(0.95, 1.05); }
+            75% { transform: scale(1.05, 0.95); }
+            100% { transform: scale(1, 1); }
+        }
+
+        @keyframes flip {
+            0% { transform: perspective(400px) rotateY(0deg); }
+            50% { transform: perspective(400px) rotateY(180deg); }
+            100% { transform: perspective(400px) rotateY(360deg); }
+        }
+
+        @keyframes tada {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            10%, 20% { transform: scale(0.9) rotate(-3deg); }
+            30%, 50%, 70%, 90% { transform: scale(1.1) rotate(3deg); }
+            40%, 60%, 80% { transform: scale(1.1) rotate(-3deg); }
+        }
+
+        @keyframes heartBeat {
+            0%, 100% { transform: scale(1); }
+            14% { transform: scale(1.3); }
+            28% { transform: scale(1); }
+            42% { transform: scale(1.3); }
+            70% { transform: scale(1); }
+        }
+
+        .anim-bounce { animation: bounce 0.8s ease-in-out; }
+        .anim-spin { animation: spin 1s ease-in-out; }
+        .anim-wiggle { animation: wiggle 0.5s ease-in-out; }
+        .anim-pulse { animation: pulse 0.6s ease-in-out; }
+        .anim-shake { animation: shake 0.5s ease-in-out; }
+        .anim-float { animation: float 1s ease-in-out; }
+        .anim-jello { animation: jello 0.8s ease-in-out; }
+        .anim-swing { animation: swing 0.8s ease-in-out; }
+        .anim-rubberBand { animation: rubberBand 0.8s ease-in-out; }
+        .anim-flip { animation: flip 1s ease-in-out; }
+        .anim-tada { animation: tada 1s ease-in-out; }
+        .anim-heartBeat { animation: heartBeat 1s ease-in-out; }
+
+        .clear-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a5a);
+            color: white;
+            border: none;
+            padding: 20px 40px;
+            font-size: 1.5rem;
+            font-family: inherit;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.4);
+            transition: all 0.3s;
+        }
+
+        .clear-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 40px rgba(255, 107, 107, 0.5);
+        }
+
+        .sparkle {
+            position: fixed;
+            pointer-events: none;
+            font-size: 2rem;
+            animation: sparkle-fade 1s forwards;
+        }
+
+        @keyframes sparkle-fade {
+            0% { opacity: 1; transform: scale(1) translateY(0); }
+            100% { opacity: 0; transform: scale(0) translateY(-50px); }
+        }
+
+        .sound-hint {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.9);
+            padding: 15px 25px;
+            border-radius: 20px;
+            font-size: 1.2rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        /* Fun background decorations */
+        .bg-shape {
+            position: fixed;
+            opacity: 0.1;
+            pointer-events: none;
+            font-size: 5rem;
+        }
+
+        .placeholder-text {
+            color: #ccc;
+            font-size: 2rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>TypeFun!</h1>
+        <p class="instruction">Press any key to see the magic!</p>
+    </div>
+
+    <div class="typing-area" id="typingArea">
+        <span class="placeholder-text" id="placeholder">Start typing...</span>
+    </div>
+
+    <button class="clear-btn" onclick="clearAll()">Clear</button>
+
+    <div class="sound-hint" id="soundHint">
+        Click anywhere to enable sound
+    </div>
+
+    <script>
+        // Bright, kid-friendly colors
+        const colors = [
+            '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7',
+            '#DDA0DD', '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E9',
+            '#F8B500', '#FF69B4', '#00CED1', '#FF7F50', '#9370DB',
+            '#20B2AA', '#FFD700', '#FF4500', '#32CD32', '#FF1493'
+        ];
+
+        // Animation classes
+        const animations = [
+            'anim-bounce', 'anim-spin', 'anim-wiggle', 'anim-pulse',
+            'anim-shake', 'anim-float', 'anim-jello', 'anim-swing',
+            'anim-rubberBand', 'anim-flip', 'anim-tada', 'anim-heartBeat'
+        ];
+
+        // Sparkle emojis
+        const sparkles = ['✨', '⭐', '🌟', '💫', '🎉', '🎊', '💖', '🌈', '🦋', '🌸'];
+
+        // Letter sounds mapping for phonics
+        const letterSounds = {
+            'a': 'A, says ah, like in apple!',
+            'b': 'B, says buh, like in ball!',
+            'c': 'C, says kuh, like in cat!',
+            'd': 'D, says duh, like in dog!',
+            'e': 'E, says eh, like in egg!',
+            'f': 'F, says fff, like in fish!',
+            'g': 'G, says guh, like in goat!',
+            'h': 'H, says huh, like in hat!',
+            'i': 'I, says ih, like in igloo!',
+            'j': 'J, says juh, like in jump!',
+            'k': 'K, says kuh, like in kite!',
+            'l': 'L, says lll, like in lion!',
+            'm': 'M, says mmm, like in monkey!',
+            'n': 'N, says nnn, like in nose!',
+            'o': 'O, says oh, like in octopus!',
+            'p': 'P, says puh, like in pig!',
+            'q': 'Q, says kwuh, like in queen!',
+            'r': 'R, says rrr, like in rabbit!',
+            's': 'S, says sss, like in sun!',
+            't': 'T, says tuh, like in tiger!',
+            'u': 'U, says uh, like in umbrella!',
+            'v': 'V, says vvv, like in violin!',
+            'w': 'W, says wuh, like in water!',
+            'x': 'X, says ks, like in box!',
+            'y': 'Y, says yuh, like in yellow!',
+            'z': 'Z, says zzz, like in zebra!',
+            '0': 'Zero!',
+            '1': 'One!',
+            '2': 'Two!',
+            '3': 'Three!',
+            '4': 'Four!',
+            '5': 'Five!',
+            '6': 'Six!',
+            '7': 'Seven!',
+            '8': 'Eight!',
+            '9': 'Nine!',
+            ' ': 'Space!'
+        };
+
+        let soundEnabled = false;
+        const typingArea = document.getElementById('typingArea');
+        const placeholder = document.getElementById('placeholder');
+        const soundHint = document.getElementById('soundHint');
+
+        // Enable sound on first interaction
+        document.addEventListener('click', () => {
+            soundEnabled = true;
+            soundHint.style.display = 'none';
+        });
+
+        // Speak the letter
+        function speakLetter(char) {
+            if (!soundEnabled) return;
+
+            const lowerChar = char.toLowerCase();
+            const text = letterSounds[lowerChar] || char;
+
+            // Cancel any ongoing speech
+            window.speechSynthesis.cancel();
+
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = 0.8; // Slower for kids
+            utterance.pitch = 1.2; // Slightly higher pitch
+            utterance.volume = 1;
+
+            // Try to find a friendly voice
+            const voices = window.speechSynthesis.getVoices();
+            const preferredVoice = voices.find(v =>
+                v.name.includes('Samantha') ||
+                v.name.includes('Victoria') ||
+                v.name.includes('Karen') ||
+                v.lang.startsWith('en')
+            );
+            if (preferredVoice) utterance.voice = preferredVoice;
+
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // Create sparkles around the letter
+        function createSparkles(x, y) {
+            for (let i = 0; i < 5; i++) {
+                const sparkle = document.createElement('span');
+                sparkle.className = 'sparkle';
+                sparkle.textContent = sparkles[Math.floor(Math.random() * sparkles.length)];
+                sparkle.style.left = (x + (Math.random() - 0.5) * 100) + 'px';
+                sparkle.style.top = (y + (Math.random() - 0.5) * 100) + 'px';
+                document.body.appendChild(sparkle);
+
+                setTimeout(() => sparkle.remove(), 1000);
+            }
+        }
+
+        // Handle key press
+        document.addEventListener('keydown', (e) => {
+            // Ignore modifier keys
+            if (e.ctrlKey || e.metaKey || e.altKey) return;
+            if (e.key.length > 1 && e.key !== ' ') {
+                // Handle backspace
+                if (e.key === 'Backspace') {
+                    const letters = typingArea.querySelectorAll('.letter');
+                    if (letters.length > 0) {
+                        letters[letters.length - 1].remove();
+                    }
+                    if (typingArea.querySelectorAll('.letter').length === 0) {
+                        placeholder.style.display = 'block';
+                    }
+                }
+                return;
+            }
+
+            e.preventDefault();
+
+            // Hide placeholder
+            placeholder.style.display = 'none';
+
+            // Create letter element
+            const letter = document.createElement('span');
+            letter.className = 'letter';
+            letter.textContent = e.key === ' ' ? '␣' : e.key.toUpperCase();
+
+            // Random color
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            letter.style.color = color;
+            letter.style.textShadow = `3px 3px 0 ${color}40`;
+
+            // Random animation
+            const anim = animations[Math.floor(Math.random() * animations.length)];
+            letter.classList.add(anim);
+
+            // Add click to replay sound
+            letter.addEventListener('click', () => {
+                letter.classList.remove(anim);
+                void letter.offsetWidth; // Trigger reflow
+                letter.classList.add(anim);
+                speakLetter(e.key);
+
+                const rect = letter.getBoundingClientRect();
+                createSparkles(rect.left + rect.width / 2, rect.top + rect.height / 2);
+            });
+
+            typingArea.appendChild(letter);
+
+            // Speak the letter
+            speakLetter(e.key);
+
+            // Create sparkles
+            setTimeout(() => {
+                const rect = letter.getBoundingClientRect();
+                createSparkles(rect.left + rect.width / 2, rect.top + rect.height / 2);
+            }, 100);
+
+            // Enable sound after first keypress
+            if (!soundEnabled) {
+                soundEnabled = true;
+                soundHint.style.display = 'none';
+            }
+        });
+
+        // Clear all letters
+        function clearAll() {
+            const letters = typingArea.querySelectorAll('.letter');
+            letters.forEach(l => l.remove());
+            placeholder.style.display = 'block';
+
+            if (soundEnabled) {
+                const utterance = new SpeechSynthesisUtterance("Let's start again!");
+                utterance.rate = 0.9;
+                utterance.pitch = 1.2;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        // Load voices
+        window.speechSynthesis.onvoiceschanged = () => {
+            window.speechSynthesis.getVoices();
+        };
+
+        // Add floating background shapes
+        function addBackgroundShapes() {
+            const shapes = ['🌟', '🌈', '🦄', '🐱', '🐶', '🌸', '🍎', '🎈'];
+            for (let i = 0; i < 10; i++) {
+                const shape = document.createElement('div');
+                shape.className = 'bg-shape';
+                shape.textContent = shapes[Math.floor(Math.random() * shapes.length)];
+                shape.style.left = Math.random() * 100 + 'vw';
+                shape.style.top = Math.random() * 100 + 'vh';
+                shape.style.transform = `rotate(${Math.random() * 360}deg)`;
+                document.body.appendChild(shape);
+            }
+        }
+        addBackgroundShapes();
+    </script>
+</body>
+</html>

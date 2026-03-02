@@ -157,6 +157,17 @@
 
         <div class="currency-row">
             <div class="currency-label">
+                <span class="flag">🇹🇼</span>
+                <div>
+                    <div class="code">TWD</div>
+                    <div class="currency-name">NT Dollar</div>
+                </div>
+            </div>
+            <input type="text" inputmode="decimal" class="currency-input" id="TWD" placeholder="0.00">
+        </div>
+
+        <div class="currency-row">
+            <div class="currency-label">
                 <span class="flag">🇺🇸</span>
                 <div>
                     <div class="code">USD</div>
@@ -168,13 +179,13 @@
 
         <div class="currency-row">
             <div class="currency-label">
-                <span class="flag">🇹🇼</span>
+                <span class="flag">🇨🇦</span>
                 <div>
-                    <div class="code">TWD</div>
-                    <div class="currency-name">NT Dollar</div>
+                    <div class="code">CAD</div>
+                    <div class="currency-name">Canadian Dollar</div>
                 </div>
             </div>
-            <input type="text" inputmode="decimal" class="currency-input" id="TWD" placeholder="0.00">
+            <input type="text" inputmode="decimal" class="currency-input" id="CAD" placeholder="0.00">
         </div>
 
         <div class="currency-row">
@@ -201,13 +212,13 @@
 
         <div class="currency-row">
             <div class="currency-label">
-                <span class="flag">🇨🇦</span>
+                <span class="flag">🇸🇬</span>
                 <div>
-                    <div class="code">CAD</div>
-                    <div class="currency-name">Canadian Dollar</div>
+                    <div class="code">SGD</div>
+                    <div class="currency-name">Singapore Dollar</div>
                 </div>
             </div>
-            <input type="text" inputmode="decimal" class="currency-input" id="CAD" placeholder="0.00">
+            <input type="text" inputmode="decimal" class="currency-input" id="SGD" placeholder="0.00">
         </div>
 
         <div class="status">
@@ -218,15 +229,16 @@
     </div>
 
     <script>
-        const currencies = ['USD', 'TWD', 'CNY', 'JPY', 'CAD'];
+        const currencies = ['TWD', 'USD', 'CAD', 'CNY', 'JPY', 'SGD'];
 
         // Static fallback rates (per 1 USD)
         const staticRates = {
-            USD: 1,
             TWD: 32.5,
+            USD: 1,
+            CAD: 1.36,
             CNY: 7.25,
             JPY: 149.5,
-            CAD: 1.36
+            SGD: 1.34
         };
 
         let rates = { ...staticRates };
@@ -244,9 +256,10 @@
                 if (data.result === 'success') {
                     rates.USD = 1;
                     rates.TWD = data.rates.TWD;
+                    rates.CAD = data.rates.CAD;
                     rates.CNY = data.rates.CNY;
                     rates.JPY = data.rates.JPY;
-                    rates.CAD = data.rates.CAD;
+                    rates.SGD = data.rates.SGD;
                     isLive = true;
 
                     statusDot.className = 'status-dot live';
@@ -289,7 +302,7 @@
                 if (c !== sourceCurrency) {
                     const converted = valueInUSD * rates[c];
                     // JPY typically shown without decimals, others with 2
-                    const decimals = c === 'JPY' ? 0 : 2;
+                    const decimals = (c === 'JPY' || c === 'TWD') ? 0 : 2;
                     document.getElementById(c).value = converted.toFixed(decimals);
                 }
             });

@@ -276,26 +276,26 @@
             box-shadow: 0 0 12px var(--cyan), 0 0 24px var(--cyan-glow);
         }
 
-        .currency-row:has(.currency-input:focus)::before {
+        .currency-row.active-row::before {
             transform: scaleY(1);
         }
 
-        .currency-row:has(.currency-input:focus) {
+        .currency-row.active-row {
             background: rgba(37, 99, 235, 0.04);
             border-radius: 4px;
         }
 
-        .currency-row:has(.currency-input:focus) .code {
+        .currency-row.active-row .code {
             color: #fff;
             text-shadow: 0 0 10px var(--cyan-glow);
         }
 
-        .currency-row:has(.currency-input:focus) .currency-name {
+        .currency-row.active-row .currency-name {
             color: var(--cyan);
             opacity: 0.7;
         }
 
-        .currency-row:has(.currency-input:focus) .flag {
+        .currency-row.active-row .flag {
             filter: drop-shadow(0 0 6px var(--cyan-glow));
         }
 
@@ -1634,22 +1634,20 @@
 
             input.addEventListener('focus', () => {
                 activeField = currency;
-                // Remove breathing glow from all, add to focused
+                // Remove active-row and breathing glow from all rows
+                document.querySelectorAll('.currency-row').forEach(r => r.classList.remove('active-row', 'focus-flicker'));
                 document.querySelectorAll('.currency-input').forEach(el => el.classList.remove('active-glow'));
+                // Activate this row
+                row.classList.add('active-row');
                 input.classList.add('active-glow');
                 // Show cursor only on focused row
                 document.querySelectorAll('.cursor-blink').forEach(c => c.style.display = 'none');
                 cursor.style.display = 'block';
-                // Clear flicker from all rows, then trigger on focused
-                document.querySelectorAll('.currency-row').forEach(r => r.classList.remove('focus-flicker'));
+                // Flicker effect
                 void row.offsetWidth;
                 row.classList.add('focus-flicker');
                 // Sweep effect on row
                 sweepRow(row);
-            });
-
-            input.addEventListener('blur', () => {
-                row.classList.remove('focus-flicker');
             });
 
             label.addEventListener('click', () => {
@@ -1665,6 +1663,10 @@
 
         // Numpad logic with interaction effects
         document.querySelectorAll('.numpad-btn').forEach(btn => {
+            // Prevent numpad buttons from stealing focus from the active input
+            btn.addEventListener('mousedown', (e) => e.preventDefault());
+            btn.addEventListener('touchstart', (e) => e.preventDefault(), { passive: false });
+
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
                 if (!activeField) activeField = getDefaultCurrency();

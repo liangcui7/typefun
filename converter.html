@@ -57,6 +57,7 @@
         body {
             font-family: 'Share Tech Mono', monospace;
             background: var(--bg-deep);
+            min-height: 100dvh;
             min-height: 100vh;
             display: flex;
             align-items: flex-start;
@@ -64,6 +65,7 @@
             color: var(--text);
             padding-bottom: 300px;
             overflow-x: hidden;
+            overscroll-behavior: none;
         }
 
         /* === ANIMATED BACKGROUND === */
@@ -471,10 +473,13 @@
             padding-bottom: max(10px, env(safe-area-inset-bottom));
             background: linear-gradient(180deg, rgba(5, 10, 14, 0.95), rgba(8, 15, 22, 0.98));
             backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border-top: 1px solid var(--border);
             max-width: 480px;
             margin: 0 auto;
             z-index: 50;
+            transform: translateZ(0);
+            -webkit-transform: translateZ(0);
         }
 
         /* Numpad top glow line */
@@ -485,10 +490,6 @@
             height: 1px;
             background: linear-gradient(90deg, transparent, var(--cyan), transparent);
             opacity: 0.4;
-        }
-
-        @keyframes numpad-in {
-            to { opacity: 1; transform: translateY(0); }
         }
 
         @media (max-width: 480px) {

@@ -334,6 +334,55 @@
             50% { box-shadow: 0 0 20px rgba(37,99,235,0.25), 0 0 40px rgba(37,99,235,0.1), inset 0 0 25px rgba(37,99,235,0.06); }
         }
 
+        /* Flicker effect on focus */
+        @keyframes focus-flicker {
+            0% { opacity: 1; }
+            5% { opacity: 0.2; }
+            10% { opacity: 0.9; }
+            15% { opacity: 0.3; }
+            20% { opacity: 1; }
+            30% { opacity: 0.85; }
+            35% { opacity: 1; }
+            100% { opacity: 1; }
+        }
+
+        .currency-row.focus-flicker .currency-input {
+            animation: focus-flicker 0.4s ease-out;
+        }
+
+        .currency-row.focus-flicker::before {
+            animation: bar-flicker 0.5s ease-out forwards;
+        }
+
+        @keyframes bar-flicker {
+            0% { transform: scaleY(0); opacity: 1; }
+            8% { transform: scaleY(0.7); opacity: 0.3; }
+            16% { transform: scaleY(0.4); opacity: 1; }
+            24% { transform: scaleY(0.9); opacity: 0.2; }
+            32% { transform: scaleY(0.6); opacity: 0.9; }
+            40% { transform: scaleY(1); opacity: 1; }
+            55% { opacity: 0.7; }
+            60% { opacity: 1; }
+            100% { transform: scaleY(1); opacity: 1; }
+        }
+
+        /* Default currency set flicker */
+        .currency-label.default-flicker .default-star {
+            animation: star-flicker 0.6s ease-out;
+        }
+
+        @keyframes star-flicker {
+            0% { opacity: 1; filter: brightness(1); }
+            8% { opacity: 0.1; filter: brightness(3); }
+            16% { opacity: 1; filter: brightness(1.5); }
+            24% { opacity: 0.3; filter: brightness(2); }
+            32% { opacity: 0.9; filter: brightness(1); }
+            44% { opacity: 0.4; filter: brightness(2.5); }
+            52% { opacity: 1; filter: brightness(1.2); }
+            70% { opacity: 0.85; filter: brightness(1); }
+            100% { opacity: 1; filter: brightness(1); }
+        }
+
         /* Quick pulse on keypress */
         .currency-input.key-pulse {
             animation: key-pulse 0.4s cubic-bezier(0.16, 1, 0.3, 1);
@@ -1464,10 +1513,14 @@
         function setDefaultCurrency(code) {
             localStorage.setItem(DEFAULT_CURRENCY_KEY, code);
             document.querySelectorAll('.currency-label').forEach(el => {
-                el.classList.remove('is-default');
+                el.classList.remove('is-default', 'default-flicker');
             });
             const row = document.getElementById(code).closest('.currency-row');
-            row.querySelector('.currency-label').classList.add('is-default');
+            const label = row.querySelector('.currency-label');
+            label.classList.add('is-default');
+            // Trigger flicker animation on the default star
+            void label.offsetWidth;
+            label.classList.add('default-flicker');
         }
 
         async function fetchRates() {
@@ -1580,6 +1633,10 @@
                 // Show cursor only on focused row
                 document.querySelectorAll('.cursor-blink').forEach(c => c.style.display = 'none');
                 cursor.style.display = 'block';
+                // Flicker effect on row
+                row.classList.remove('focus-flicker');
+                void row.offsetWidth;
+                row.classList.add('focus-flicker');
                 // Sweep effect on row
                 sweepRow(row);
             });

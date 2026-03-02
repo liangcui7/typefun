@@ -191,6 +191,41 @@
             border-color: #4fc3f7;
             color: #4fc3f7;
         }
+
+        .numpad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .numpad-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 1.3rem;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            padding: 14px 0;
+            cursor: pointer;
+            transition: background 0.15s, transform 0.1s;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .numpad-btn:active {
+            background: rgba(79, 195, 247, 0.2);
+            transform: scale(0.95);
+        }
+
+        .numpad-btn.clear-btn {
+            color: #ff9800;
+        }
+
+        .numpad-btn.backspace-btn {
+            color: #ef5350;
+        }
     </style>
 </head>
 <body>
@@ -207,7 +242,7 @@
                     <div class="currency-name">NT Dollar</div>
                 </div>
             </div>
-            <input type="text" inputmode="decimal" class="currency-input" id="TWD" placeholder="0.00">
+            <input type="text" inputmode="none" readonly class="currency-input" id="TWD" placeholder="0.00">
         </div>
 
         <div class="currency-row">
@@ -219,7 +254,7 @@
                     <div class="currency-name">US Dollar</div>
                 </div>
             </div>
-            <input type="text" inputmode="decimal" class="currency-input" id="USD" placeholder="0.00">
+            <input type="text" inputmode="none" readonly class="currency-input" id="USD" placeholder="0.00">
         </div>
 
         <div class="currency-row">
@@ -231,7 +266,7 @@
                     <div class="currency-name">Canadian Dollar</div>
                 </div>
             </div>
-            <input type="text" inputmode="decimal" class="currency-input" id="CAD" placeholder="0.00">
+            <input type="text" inputmode="none" readonly class="currency-input" id="CAD" placeholder="0.00">
         </div>
 
         <div class="currency-row">
@@ -243,7 +278,7 @@
                     <div class="currency-name">Chinese Yuan</div>
                 </div>
             </div>
-            <input type="text" inputmode="decimal" class="currency-input" id="CNY" placeholder="0.00">
+            <input type="text" inputmode="none" readonly class="currency-input" id="CNY" placeholder="0.00">
         </div>
 
         <div class="currency-row">
@@ -255,7 +290,7 @@
                     <div class="currency-name">Japanese Yen</div>
                 </div>
             </div>
-            <input type="text" inputmode="decimal" class="currency-input" id="JPY" placeholder="0.00">
+            <input type="text" inputmode="none" readonly class="currency-input" id="JPY" placeholder="0.00">
         </div>
 
         <div class="currency-row">
@@ -267,13 +302,29 @@
                     <div class="currency-name">Singapore Dollar</div>
                 </div>
             </div>
-            <input type="text" inputmode="decimal" class="currency-input" id="SGD" placeholder="0.00">
+            <input type="text" inputmode="none" readonly class="currency-input" id="SGD" placeholder="0.00">
         </div>
 
         <div class="status">
             <span class="status-dot" id="statusDot"></span>
             <span class="status-text" id="statusText">Loading rates...</span>
             <button class="refresh-btn" onclick="fetchRates()">Refresh</button>
+        </div>
+
+        <div class="numpad">
+            <button class="numpad-btn" data-key="1">1</button>
+            <button class="numpad-btn" data-key="2">2</button>
+            <button class="numpad-btn" data-key="3">3</button>
+            <button class="numpad-btn" data-key="4">4</button>
+            <button class="numpad-btn" data-key="5">5</button>
+            <button class="numpad-btn" data-key="6">6</button>
+            <button class="numpad-btn" data-key="7">7</button>
+            <button class="numpad-btn" data-key="8">8</button>
+            <button class="numpad-btn" data-key="9">9</button>
+            <button class="numpad-btn" data-key=".">.</button>
+            <button class="numpad-btn" data-key="0">0</button>
+            <button class="numpad-btn backspace-btn" data-key="del">&#9003;</button>
+            <button class="numpad-btn clear-btn" data-key="C" style="grid-column: 1 / -1;">Clear</button>
         </div>
     </div>
 
@@ -412,29 +463,40 @@
             });
         });
 
-        // Mark default and auto-focus on load
+        // Mark default and select it on load
         const defaultCurrency = getDefaultCurrency();
         setDefaultCurrency(defaultCurrency);
+        activeField = defaultCurrency;
 
-        // Mobile browsers require user gesture to open keyboard.
-        // Try programmatic focus first (works on desktop & some PWAs),
-        // then fall back to focusing on first touch anywhere on the page.
-        const defaultInput = document.getElementById(defaultCurrency);
-        defaultInput.setAttribute('autofocus', '');
-        setTimeout(() => { defaultInput.focus(); }, 300);
+        // Highlight the default input
+        document.getElementById(defaultCurrency).focus();
 
-        let hasFocused = false;
-        document.addEventListener('touchstart', function onFirstTouch() {
-            if (!hasFocused) {
-                hasFocused = true;
-                const cur = getDefaultCurrency();
-                const input = document.getElementById(cur);
-                if (document.activeElement !== input && !document.activeElement.classList.contains('currency-input')) {
-                    input.focus();
+        // Numpad logic
+        document.querySelectorAll('.numpad-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (!activeField) activeField = getDefaultCurrency();
+                const input = document.getElementById(activeField);
+                const raw = input.value.replace(/,/g, '');
+                const key = btn.dataset.key;
+
+                if (key === 'C') {
+                    input.value = '';
+                    convert(activeField);
+                } else if (key === 'del') {
+                    input.value = addCommas(raw.slice(0, -1));
+                    convert(activeField);
+                } else if (key === '.') {
+                    if (!raw.includes('.')) {
+                        input.value = addCommas(raw || '0') + '.';
+                        convert(activeField);
+                    }
+                } else {
+                    input.value = addCommas(raw + key);
+                    convert(activeField);
                 }
-            }
-            document.removeEventListener('touchstart', onFirstTouch);
-        }, { once: true });
+            });
+        });
 
         // Fetch live rates on load
         fetchRates();

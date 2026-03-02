@@ -344,6 +344,25 @@
             }
         }
 
+        function addCommas(numStr) {
+            const parts = numStr.split('.');
+            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            return parts.join('.');
+        }
+
+        function formatInput(input) {
+            const raw = input.value.replace(/,/g, '');
+            if (raw === '' || raw === '.' || raw === '-') return;
+            // Preserve trailing dot or trailing zeros after decimal
+            const match = raw.match(/^(\d*)(\.\d*)?$/);
+            if (!match) return;
+            const formatted = addCommas(match[1] || '0') + (match[2] || '');
+            const cursorFromEnd = input.value.length - input.selectionStart;
+            input.value = formatted;
+            const newCursor = Math.max(0, formatted.length - cursorFromEnd);
+            input.setSelectionRange(newCursor, newCursor);
+        }
+
         function convert(sourceCurrency) {
             const sourceInput = document.getElementById(sourceCurrency);
             const rawValue = sourceInput.value.replace(/,/g, '');
@@ -358,15 +377,17 @@
                 return;
             }
 
+            // Format the source input with commas
+            formatInput(sourceInput);
+
             // Convert source to USD first, then to each target
             const valueInUSD = value / rates[sourceCurrency];
 
             currencies.forEach(c => {
                 if (c !== sourceCurrency) {
                     const converted = valueInUSD * rates[c];
-                    // JPY typically shown without decimals, others with 2
                     const decimals = (c === 'JPY' || c === 'TWD') ? 0 : 2;
-                    document.getElementById(c).value = converted.toFixed(decimals);
+                    document.getElementById(c).value = addCommas(converted.toFixed(decimals));
                 }
             });
         }

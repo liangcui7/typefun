@@ -1149,7 +1149,7 @@
                 </svg>
             </div>
             <div class="login-title">Identity Verification</div>
-            <div class="login-subtitle">Enter your real full name to continue</div>
+            <div class="login-subtitle">Enter your <strong>real name</strong> to continue</div>
             <div class="login-input-wrapper">
                 <input type="text" class="login-input" id="loginInput" placeholder="Your real name (first and last)" autocomplete="off" spellcheck="false">
                 <div class="login-input-line"></div>
@@ -1322,7 +1322,7 @@
                 async function attemptLogin() {
                     const name = input.value.trim();
                     if (!name) {
-                        showError('Please enter your real full name');
+                        showError('Please enter your <strong>real name</strong>');
                         return;
                     }
 
@@ -1355,14 +1355,14 @@
                             }, 1200);
                         }, 1000);
                     } else {
-                        showError('Not recognized — please use your real name');
+                        showError('Not recognized — please use your <strong>real name</strong>');
                         input.classList.add('login-error-glow');
                         setTimeout(() => input.classList.remove('login-error-glow'), 300);
                     }
                 }
 
                 function showError(msg) {
-                    errorEl.textContent = msg;
+                    errorEl.innerHTML = msg;
                     errorEl.classList.remove('visible');
                     void errorEl.offsetWidth;
                     errorEl.classList.add('visible');

@@ -1166,7 +1166,7 @@
     <div class="container">
         <div class="container-glow"></div>
         <h1><span id="titleText"></span><span class="title-cursor"></span></h1>
-        <p class="subtitle">Realtime Exchange Network</p>
+        <p class="subtitle" id="subtitleText">Premium & ad-free</p>
 
         <div class="currency-row">
             <div class="currency-label" data-currency-label>
@@ -1288,7 +1288,13 @@
             }
 
             // Check if already authenticated
+            function setSubtitleName(name) {
+                const sub = document.getElementById('subtitleText');
+                if (sub && name) sub.textContent = 'Premium & ad-free for ' + name;
+            }
+
             if (localStorage.getItem(AUTH_KEY)) {
+                setSubtitleName(localStorage.getItem(AUTH_KEY));
                 document.body.classList.remove('locked');
                 const overlay = document.getElementById('loginOverlay');
                 if (overlay) overlay.remove();
@@ -1337,6 +1343,7 @@
 
                         // Save auth
                         localStorage.setItem(AUTH_KEY, displayName);
+                        setSubtitleName(displayName);
 
                         // Unlock after a beat
                         setTimeout(() => {

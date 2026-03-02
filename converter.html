@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#0f2027">
+    <meta name="theme-color" content="#050a0e">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Currency">
@@ -11,14 +11,13 @@
     <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23203a43'/%3E%3Cstop offset='100%25' stop-color='%232c5364'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='512' height='512' rx='96' fill='url(%23bg)'/%3E%3Ccircle cx='200' cy='220' r='90' fill='none' stroke='%234fc3f7' stroke-width='24'/%3E%3Ctext x='200' y='245' text-anchor='middle' font-family='sans-serif' font-weight='700' font-size='96' fill='%234fc3f7'%3E%24%3C/text%3E%3Ccircle cx='312' cy='292' r='90' fill='none' stroke='%2381d4fa' stroke-width='24'/%3E%3Ctext x='312' y='318' text-anchor='middle' font-family='sans-serif' font-weight='700' font-size='80' fill='%2381d4fa'%3E%C2%A5%3C/text%3E%3C/svg%3E">
     <title>Currency Converter</title>
     <script>
-        // Inline web app manifest for Android home screen
         const manifest = {
             name: "Currency Converter",
             short_name: "Currency",
             start_url: "converter.html",
             display: "standalone",
-            background_color: "#0f2027",
-            theme_color: "#0f2027",
+            background_color: "#050a0e",
+            theme_color: "#050a0e",
             icons: [{
                 src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23203a43'/%3E%3Cstop offset='100%25' stop-color='%232c5364'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='512' height='512' rx='96' fill='url(%23bg)'/%3E%3Ccircle cx='200' cy='220' r='90' fill='none' stroke='%234fc3f7' stroke-width='24'/%3E%3Ctext x='200' y='245' text-anchor='middle' font-family='sans-serif' font-weight='700' font-size='96' fill='%234fc3f7'%3E%24%3C/text%3E%3Ccircle cx='312' cy='292' r='90' fill='none' stroke='%2381d4fa' stroke-width='24'/%3E%3Ctext x='312' y='318' text-anchor='middle' font-family='sans-serif' font-weight='700' font-size='80' fill='%2381d4fa'%3E%C2%A5%3C/text%3E%3C/svg%3E",
                 sizes: "512x512",
@@ -33,6 +32,22 @@
         document.head.appendChild(link);
     </script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Share+Tech+Mono&display=swap');
+
+        :root {
+            --cyan: #00e5ff;
+            --cyan-dim: rgba(0, 229, 255, 0.15);
+            --cyan-glow: rgba(0, 229, 255, 0.4);
+            --orange: #ff6d00;
+            --orange-dim: rgba(255, 109, 0, 0.15);
+            --orange-glow: rgba(255, 109, 0, 0.4);
+            --bg-deep: #050a0e;
+            --bg-panel: rgba(8, 18, 25, 0.85);
+            --border: rgba(0, 229, 255, 0.12);
+            --text: #c8d6e5;
+            --text-dim: #4a6070;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -40,48 +55,210 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            font-family: 'Share Tech Mono', monospace;
+            background: var(--bg-deep);
             min-height: 100vh;
             display: flex;
             align-items: flex-start;
             justify-content: center;
-            color: #e0e0e0;
+            color: var(--text);
             padding-bottom: 260px;
+            overflow-x: hidden;
         }
 
+        /* === ANIMATED BACKGROUND === */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 80% 50% at 50% 0%, rgba(0, 229, 255, 0.06) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 40% at 20% 100%, rgba(255, 109, 0, 0.04) 0%, transparent 50%),
+                radial-gradient(ellipse 60% 40% at 80% 80%, rgba(0, 229, 255, 0.03) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Horizontal scan line */
+        body::after {
+            content: '';
+            position: fixed;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--cyan-glow), var(--cyan), var(--cyan-glow), transparent);
+            opacity: 0.3;
+            z-index: 100;
+            animation: scanline 4s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes scanline {
+            0%, 100% { top: -2px; opacity: 0; }
+            10% { opacity: 0.3; }
+            90% { opacity: 0.3; }
+            100% { top: 100vh; opacity: 0; }
+        }
+
+        /* === FLOATING PARTICLES === */
+        .particles {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            background: var(--cyan);
+            border-radius: 50%;
+            opacity: 0;
+            animation: float-up linear infinite;
+        }
+
+        @keyframes float-up {
+            0% { transform: translateY(100vh) scale(1); opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { transform: translateY(-10vh) scale(0); opacity: 0; }
+        }
+
+        /* === CONTAINER === */
         .container {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
+            position: relative;
+            z-index: 1;
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: 2px;
             padding: 24px;
             width: 100%;
             max-width: 480px;
             margin: 20px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            animation: container-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        @keyframes container-in {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Corner accents - Death Stranding style */
+        .container::before,
+        .container::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-color: var(--cyan);
+            border-style: solid;
+            opacity: 0.5;
+        }
+        .container::before {
+            top: -1px; left: -1px;
+            border-width: 1px 0 0 1px;
+        }
+        .container::after {
+            bottom: -1px; right: -1px;
+            border-width: 0 1px 1px 0;
+        }
+
+        /* Pulsing top border glow */
+        .container-glow {
+            position: absolute;
+            top: 0; left: 10%; right: 10%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+            animation: glow-pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes glow-pulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
         }
 
         h1 {
             text-align: center;
-            font-size: 1.5rem;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
             font-weight: 600;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
             margin-bottom: 4px;
             color: #fff;
+            text-shadow: 0 0 20px var(--cyan-glow);
+            animation: title-in 1s ease forwards;
+            opacity: 0;
+        }
+
+        @keyframes title-in {
+            0% { opacity: 0; letter-spacing: 0.8em; }
+            100% { opacity: 1; letter-spacing: 0.3em; }
         }
 
         .subtitle {
             text-align: center;
-            font-size: 0.8rem;
-            color: #8899aa;
+            font-size: 0.7rem;
+            color: var(--text-dim);
             margin-bottom: 16px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            animation: fade-in 1.2s ease forwards;
+            opacity: 0;
         }
 
+        @keyframes fade-in {
+            to { opacity: 1; }
+        }
+
+        /* === CURRENCY ROWS === */
         .currency-row {
             display: flex;
             align-items: center;
             gap: 10px;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
+            padding: 6px 8px;
+            border-radius: 2px;
+            position: relative;
+            transition: background 0.3s;
+            animation: row-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+
+        .currency-row:nth-child(1) { animation-delay: 0.1s; }
+        .currency-row:nth-child(2) { animation-delay: 0.15s; }
+        .currency-row:nth-child(3) { animation-delay: 0.2s; }
+        .currency-row:nth-child(4) { animation-delay: 0.25s; }
+        .currency-row:nth-child(5) { animation-delay: 0.3s; }
+        .currency-row:nth-child(6) { animation-delay: 0.35s; }
+
+        @keyframes row-in {
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .currency-row::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 2px;
+            height: 0;
+            background: var(--cyan);
+            transition: height 0.3s;
+            box-shadow: 0 0 8px var(--cyan-glow);
+        }
+
+        .currency-row:has(.currency-input:focus)::before {
+            height: 70%;
+        }
+
+        .currency-row:has(.currency-input:focus) {
+            background: rgba(0, 229, 255, 0.03);
         }
 
         .currency-label {
@@ -95,15 +272,22 @@
 
         .currency-label .default-star {
             position: absolute;
-            top: -4px;
-            right: -4px;
-            font-size: 0.55rem;
-            color: #4fc3f7;
+            top: -6px;
+            right: -2px;
+            font-size: 0.5rem;
+            color: var(--orange);
             display: none;
+            filter: drop-shadow(0 0 4px var(--orange-glow));
         }
 
         .currency-label.is-default .default-star {
             display: block;
+            animation: star-pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes star-pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
         }
 
         .flag {
@@ -112,87 +296,110 @@
         }
 
         .code {
+            font-family: 'Orbitron', sans-serif;
             font-weight: 600;
-            font-size: 0.85rem;
-            color: #ccd6e0;
+            font-size: 0.75rem;
+            color: var(--cyan);
+            letter-spacing: 0.1em;
         }
 
         .currency-name {
-            font-size: 0.65rem;
-            color: #667788;
+            font-size: 0.6rem;
+            color: var(--text-dim);
+            letter-spacing: 0.05em;
         }
 
+        /* === INPUTS === */
         .currency-input {
             flex: 1;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 10px;
+            background: rgba(0, 229, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 2px;
             padding: 10px 12px;
             font-size: 1rem;
             color: #fff;
             outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s;
+            transition: all 0.3s;
             text-align: right;
-            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-family: 'Share Tech Mono', monospace;
         }
 
         .currency-input:focus {
-            border-color: #4fc3f7;
-            box-shadow: 0 0 0 3px rgba(79, 195, 247, 0.15);
+            border-color: var(--cyan);
+            box-shadow:
+                0 0 10px rgba(0, 229, 255, 0.1),
+                inset 0 0 20px rgba(0, 229, 255, 0.03);
+            background: rgba(0, 229, 255, 0.05);
         }
 
         .currency-input::placeholder {
-            color: #556677;
+            color: rgba(0, 229, 255, 0.15);
         }
 
+        /* === STATUS === */
         .status {
             text-align: center;
             margin-top: 12px;
             padding-top: 12px;
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            border-top: 1px solid var(--border);
+            animation: fade-in 1.5s ease forwards;
+            opacity: 0;
         }
 
         .status-dot {
             display: inline-block;
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
             border-radius: 50%;
             margin-right: 6px;
             vertical-align: middle;
         }
 
         .status-dot.live {
-            background: #4caf50;
-            box-shadow: 0 0 6px #4caf50;
+            background: var(--cyan);
+            box-shadow: 0 0 8px var(--cyan), 0 0 16px var(--cyan-glow);
+            animation: dot-pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes dot-pulse {
+            0%, 100% { box-shadow: 0 0 4px var(--cyan), 0 0 8px var(--cyan-glow); }
+            50% { box-shadow: 0 0 8px var(--cyan), 0 0 20px var(--cyan-glow); }
         }
 
         .status-dot.static {
-            background: #ff9800;
-            box-shadow: 0 0 6px #ff9800;
+            background: var(--orange);
+            box-shadow: 0 0 8px var(--orange-glow);
         }
 
         .status-text {
-            font-size: 0.75rem;
-            color: #667788;
+            font-size: 0.65rem;
+            color: var(--text-dim);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
         }
 
         .refresh-btn {
             background: none;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            color: #8899aa;
-            padding: 6px 14px;
-            border-radius: 8px;
-            font-size: 0.75rem;
+            border: 1px solid var(--border);
+            color: var(--text-dim);
+            padding: 4px 12px;
+            border-radius: 2px;
+            font-size: 0.65rem;
+            font-family: 'Share Tech Mono', monospace;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
             cursor: pointer;
             margin-left: 10px;
-            transition: all 0.2s;
+            transition: all 0.3s;
         }
 
         .refresh-btn:hover {
-            border-color: #4fc3f7;
-            color: #4fc3f7;
+            border-color: var(--cyan);
+            color: var(--cyan);
+            box-shadow: 0 0 10px var(--cyan-glow);
         }
 
+        /* === NUMPAD === */
         .numpad {
             position: fixed;
             bottom: 0;
@@ -200,60 +407,149 @@
             right: 0;
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 6px;
-            padding: 12px 16px;
-            padding-bottom: max(12px, env(safe-area-inset-bottom));
-            background: rgba(15, 32, 39, 0.95);
+            gap: 4px;
+            padding: 10px 12px;
+            padding-bottom: max(10px, env(safe-area-inset-bottom));
+            background: linear-gradient(180deg, rgba(5, 10, 14, 0.95), rgba(8, 15, 22, 0.98));
             backdrop-filter: blur(20px);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 1px solid var(--border);
             max-width: 480px;
             margin: 0 auto;
+            z-index: 50;
+            animation: numpad-in 0.6s 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(100%);
+        }
+
+        /* Numpad top glow line */
+        .numpad::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 20%; right: 20%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+            opacity: 0.4;
+        }
+
+        @keyframes numpad-in {
+            to { opacity: 1; transform: translateY(0); }
         }
 
         @media (max-width: 480px) {
-            .numpad {
-                max-width: 100%;
-            }
+            .numpad { max-width: 100%; }
         }
 
         .numpad-btn {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
+            background: rgba(0, 229, 255, 0.04);
+            border: 1px solid rgba(0, 229, 255, 0.08);
+            border-radius: 2px;
             color: #fff;
-            font-size: 1.3rem;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            padding: 14px 0;
+            font-size: 1.2rem;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 400;
+            padding: 12px 0;
             cursor: pointer;
-            transition: background 0.15s, transform 0.1s;
+            transition: all 0.15s;
             user-select: none;
             -webkit-user-select: none;
             -webkit-tap-highlight-color: transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Ripple flash on press */
+        .numpad-btn::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, var(--cyan-glow), transparent 70%);
+            opacity: 0;
+            transition: opacity 0.15s;
+        }
+
+        .numpad-btn:active::after {
+            opacity: 1;
         }
 
         .numpad-btn:active {
-            background: rgba(79, 195, 247, 0.2);
-            transform: scale(0.95);
+            background: rgba(0, 229, 255, 0.12);
+            border-color: var(--cyan);
+            transform: scale(0.96);
+            box-shadow: 0 0 12px var(--cyan-glow);
         }
 
         .numpad-btn.clear-btn {
-            color: #ff9800;
+            color: var(--orange);
+            border-color: rgba(255, 109, 0, 0.15);
+            font-size: 0.8rem;
+            letter-spacing: 0.15em;
+        }
+
+        .numpad-btn.clear-btn:active {
+            background: rgba(255, 109, 0, 0.12);
+            border-color: var(--orange);
+            box-shadow: 0 0 12px var(--orange-glow);
         }
 
         .numpad-btn.backspace-btn {
-            color: #ef5350;
+            color: var(--orange);
+        }
+
+        .numpad-btn.backspace-btn:active {
+            background: rgba(255, 109, 0, 0.12);
+            border-color: var(--orange);
+            box-shadow: 0 0 12px var(--orange-glow);
+        }
+
+        /* === DECORATIVE ELEMENTS === */
+        .hud-corner {
+            position: fixed;
+            width: 40px;
+            height: 40px;
+            border-color: rgba(0, 229, 255, 0.15);
+            border-style: solid;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .hud-corner.tl { top: 12px; left: 12px; border-width: 1px 0 0 1px; }
+        .hud-corner.tr { top: 12px; right: 12px; border-width: 1px 1px 0 0; }
+        .hud-corner.bl { bottom: 270px; left: 12px; border-width: 0 0 1px 1px; }
+        .hud-corner.br { bottom: 270px; right: 12px; border-width: 0 1px 1px 0; }
+
+        /* Data readout line */
+        .data-line {
+            position: fixed;
+            top: 8px;
+            right: 60px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.55rem;
+            color: rgba(0, 229, 255, 0.2);
+            letter-spacing: 0.1em;
+            z-index: 0;
+            pointer-events: none;
         }
     </style>
 </head>
 <body>
+    <!-- HUD corners -->
+    <div class="hud-corner tl"></div>
+    <div class="hud-corner tr"></div>
+    <div class="hud-corner bl"></div>
+    <div class="hud-corner br"></div>
+    <div class="data-line" id="dataLine">SYS:ACTIVE</div>
+
+    <!-- Floating particles -->
+    <div class="particles" id="particles"></div>
+
     <div class="container">
-        <h1>Currency Converter</h1>
-        <p class="subtitle">Type in any field to convert</p>
+        <div class="container-glow"></div>
+        <h1>Currency</h1>
+        <p class="subtitle">Realtime Exchange Network</p>
 
         <div class="currency-row">
             <div class="currency-label" data-currency-label>
                 <span class="default-star">&#9733;</span>
-                <span class="flag">🇹🇼</span>
+                <span class="flag">&#127481;&#127484;</span>
                 <div>
                     <div class="code">TWD</div>
                     <div class="currency-name">NT Dollar</div>
@@ -265,7 +561,7 @@
         <div class="currency-row">
             <div class="currency-label" data-currency-label>
                 <span class="default-star">&#9733;</span>
-                <span class="flag">🇺🇸</span>
+                <span class="flag">&#127482;&#127480;</span>
                 <div>
                     <div class="code">USD</div>
                     <div class="currency-name">US Dollar</div>
@@ -277,7 +573,7 @@
         <div class="currency-row">
             <div class="currency-label" data-currency-label>
                 <span class="default-star">&#9733;</span>
-                <span class="flag">🇨🇦</span>
+                <span class="flag">&#127464;&#127462;</span>
                 <div>
                     <div class="code">CAD</div>
                     <div class="currency-name">Canadian Dollar</div>
@@ -289,7 +585,7 @@
         <div class="currency-row">
             <div class="currency-label" data-currency-label>
                 <span class="default-star">&#9733;</span>
-                <span class="flag">🇨🇳</span>
+                <span class="flag">&#127464;&#127475;</span>
                 <div>
                     <div class="code">CNY</div>
                     <div class="currency-name">Chinese Yuan</div>
@@ -301,7 +597,7 @@
         <div class="currency-row">
             <div class="currency-label" data-currency-label>
                 <span class="default-star">&#9733;</span>
-                <span class="flag">🇯🇵</span>
+                <span class="flag">&#127471;&#127477;</span>
                 <div>
                     <div class="code">JPY</div>
                     <div class="currency-name">Japanese Yen</div>
@@ -313,7 +609,7 @@
         <div class="currency-row">
             <div class="currency-label" data-currency-label>
                 <span class="default-star">&#9733;</span>
-                <span class="flag">🇸🇬</span>
+                <span class="flag">&#127480;&#127468;</span>
                 <div>
                     <div class="code">SGD</div>
                     <div class="currency-name">Singapore Dollar</div>
@@ -324,8 +620,8 @@
 
         <div class="status">
             <span class="status-dot" id="statusDot"></span>
-            <span class="status-text" id="statusText">Loading rates...</span>
-            <button class="refresh-btn" onclick="fetchRates()">Refresh</button>
+            <span class="status-text" id="statusText">Connecting...</span>
+            <button class="refresh-btn" onclick="fetchRates()">Sync</button>
         </div>
 
     </div>
@@ -343,14 +639,39 @@
         <button class="numpad-btn" data-key=".">.</button>
         <button class="numpad-btn" data-key="0">0</button>
         <button class="numpad-btn backspace-btn" data-key="del">&#9003;</button>
-        <button class="numpad-btn clear-btn" data-key="C" style="grid-column: 1 / -1;">Clear</button>
+        <button class="numpad-btn clear-btn" data-key="C" style="grid-column: 1 / -1;">CLEAR</button>
     </div>
 
     <script>
+        // === PARTICLES ===
+        (function() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 20; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                p.style.left = Math.random() * 100 + '%';
+                p.style.animationDuration = (8 + Math.random() * 12) + 's';
+                p.style.animationDelay = (Math.random() * 10) + 's';
+                p.style.width = p.style.height = (1 + Math.random() * 1.5) + 'px';
+                if (Math.random() > 0.7) p.style.background = '#ff6d00';
+                container.appendChild(p);
+            }
+        })();
+
+        // === DATA LINE READOUT ===
+        (function() {
+            const el = document.getElementById('dataLine');
+            setInterval(() => {
+                const now = new Date();
+                const ts = now.toTimeString().slice(0, 8);
+                el.textContent = `SYS:ACTIVE // ${ts}`;
+            }, 1000);
+        })();
+
+        // === CORE LOGIC ===
         const currencies = ['TWD', 'USD', 'CAD', 'CNY', 'JPY', 'SGD'];
         const DEFAULT_CURRENCY_KEY = 'defaultCurrency';
 
-        // Static fallback rates (per 1 USD)
         const staticRates = {
             TWD: 32.5,
             USD: 1,
@@ -396,9 +717,8 @@
 
                     statusDot.className = 'status-dot live';
                     const updated = new Date(data.time_last_update_utc).toLocaleDateString();
-                    statusText.textContent = `Live rates \u00b7 Updated ${updated}`;
+                    statusText.textContent = `LIVE // ${updated}`;
 
-                    // Re-convert active field if there's a value
                     if (activeField) {
                         convert(activeField);
                     }
@@ -409,7 +729,7 @@
                 rates = { ...staticRates };
                 isLive = false;
                 statusDot.className = 'status-dot static';
-                statusText.textContent = 'Using static rates (API unavailable)';
+                statusText.textContent = 'OFFLINE // STATIC RATES';
             }
         }
 
@@ -422,7 +742,6 @@
         function formatInput(input) {
             const raw = input.value.replace(/,/g, '');
             if (raw === '' || raw === '.' || raw === '-') return;
-            // Preserve trailing dot or trailing zeros after decimal
             const match = raw.match(/^(\d*)(\.\d*)?$/);
             if (!match) return;
             const formatted = addCommas(match[1] || '0') + (match[2] || '');
@@ -446,10 +765,8 @@
                 return;
             }
 
-            // Format the source input with commas
             formatInput(sourceInput);
 
-            // Convert source to USD first, then to each target
             const valueInUSD = value / rates[sourceCurrency];
 
             currencies.forEach(c => {
@@ -475,7 +792,6 @@
                 activeField = currency;
             });
 
-            // Tap label to set as default
             label.addEventListener('click', () => {
                 setDefaultCurrency(currency);
             });
@@ -485,8 +801,6 @@
         const defaultCurrency = getDefaultCurrency();
         setDefaultCurrency(defaultCurrency);
         activeField = defaultCurrency;
-
-        // Highlight the default input
         document.getElementById(defaultCurrency).focus();
 
         // Numpad logic
@@ -516,7 +830,6 @@
             });
         });
 
-        // Fetch live rates on load
         fetchRates();
     </script>
 </body>

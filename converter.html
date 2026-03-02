@@ -1663,9 +1663,8 @@
 
         // Numpad logic with interaction effects
         document.querySelectorAll('.numpad-btn').forEach(btn => {
-            // Prevent numpad buttons from stealing focus from the active input
+            // Prevent numpad from stealing focus (desktop)
             btn.addEventListener('mousedown', (e) => e.preventDefault());
-            btn.addEventListener('touchstart', (e) => e.preventDefault(), { passive: false });
 
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -1714,6 +1713,9 @@
                     input.classList.remove('key-pulse');
                     input.classList.add('active-glow');
                 }, { once: true });
+
+                // Restore focus to active input (touch devices)
+                input.focus();
             });
         });
 

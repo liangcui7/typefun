@@ -62,7 +62,7 @@
             align-items: flex-start;
             justify-content: center;
             color: var(--text);
-            padding-bottom: 260px;
+            padding-bottom: 300px;
             overflow-x: hidden;
         }
 
@@ -261,6 +261,21 @@
 
         .currency-row:has(.currency-input:focus) {
             background: rgba(0, 229, 255, 0.04);
+            border-radius: 4px;
+        }
+
+        .currency-row:has(.currency-input:focus) .code {
+            color: #fff;
+            text-shadow: 0 0 10px var(--cyan-glow);
+        }
+
+        .currency-row:has(.currency-input:focus) .currency-name {
+            color: var(--cyan);
+            opacity: 0.7;
+        }
+
+        .currency-row:has(.currency-input:focus) .flag {
+            filter: drop-shadow(0 0 6px var(--cyan-glow));
         }
 
         /* Sweep highlight on row select */
@@ -299,8 +314,8 @@
         }
 
         @keyframes input-breathe {
-            0%, 100% { box-shadow: 0 0 8px rgba(0,229,255,0.08), inset 0 0 15px rgba(0,229,255,0.02); }
-            50% { box-shadow: 0 0 16px rgba(0,229,255,0.15), inset 0 0 25px rgba(0,229,255,0.04); }
+            0%, 100% { box-shadow: 0 0 12px rgba(0,229,255,0.12), 0 0 25px rgba(0,229,255,0.05), inset 0 0 15px rgba(0,229,255,0.03); }
+            50% { box-shadow: 0 0 20px rgba(0,229,255,0.25), 0 0 40px rgba(0,229,255,0.1), inset 0 0 25px rgba(0,229,255,0.06); }
         }
 
         .currency-label {
@@ -369,9 +384,11 @@
         .currency-input:focus {
             border-color: var(--cyan);
             box-shadow:
-                0 0 10px rgba(0, 229, 255, 0.1),
-                inset 0 0 20px rgba(0, 229, 255, 0.03);
-            background: rgba(0, 229, 255, 0.05);
+                0 0 15px rgba(0, 229, 255, 0.2),
+                0 0 30px rgba(0, 229, 255, 0.08),
+                inset 0 0 20px rgba(0, 229, 255, 0.05);
+            background: rgba(0, 229, 255, 0.07);
+            color: var(--cyan);
         }
 
         .currency-input::placeholder {
@@ -489,7 +506,7 @@
             font-size: 1.2rem;
             font-family: 'Orbitron', sans-serif;
             font-weight: 400;
-            padding: 12px 0;
+            padding: 16px 0;
             cursor: pointer;
             transition: all 0.12s cubic-bezier(0.16, 1, 0.3, 1);
             user-select: none;

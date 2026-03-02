@@ -209,7 +209,7 @@
             display: none;
         }
 
-        #titleText {
+        h1 {
             transition: opacity 1s ease;
         }
 
@@ -1403,22 +1403,23 @@
                 'Currency'
             ];
             const el = document.getElementById('titleText');
+            const h1 = el.parentElement;
             let titleIdx = 0;
 
             el.textContent = titles[0];
-            el.style.opacity = '1';
+            h1.style.opacity = '1';
 
             function cycleTitles() {
                 setTimeout(() => {
                     // 2s fade out
-                    el.style.transition = 'opacity 2s ease';
-                    el.style.opacity = '0';
+                    h1.style.transition = 'opacity 2s ease';
+                    h1.style.opacity = '0';
                     setTimeout(() => {
                         titleIdx = (titleIdx + 1) % titles.length;
                         el.textContent = titles[titleIdx];
                         // 1s fade in
-                        el.style.transition = 'opacity 1s ease';
-                        el.style.opacity = '1';
+                        h1.style.transition = 'opacity 1s ease';
+                        h1.style.opacity = '1';
                         cycleTitles();
                     }, 2000);
                 }, 3000);

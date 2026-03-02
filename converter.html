@@ -184,7 +184,7 @@
             position: absolute;
             top: 0; left: 10%; right: 10%;
             height: 1px;
-            background: linear-gradient(90deg, transparent, var(--cyan), var(--accent), transparent);
+            background: linear-gradient(90deg, transparent, var(--cyan), #fff, var(--accent), transparent);
             animation: glow-pulse 3s ease-in-out infinite;
         }
 
@@ -273,7 +273,7 @@
             top: 0;
             bottom: 0;
             width: 2px;
-            background: linear-gradient(180deg, transparent, var(--cyan), transparent);
+            background: linear-gradient(180deg, transparent, var(--cyan), #fff, var(--cyan), transparent);
             transform: scaleY(0);
             transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             box-shadow: 0 0 12px var(--cyan), 0 0 24px var(--cyan-glow);
@@ -307,7 +307,7 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(90deg, var(--cyan-glow), transparent 40%);
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.5), var(--cyan-glow), transparent 40%);
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.4s;
@@ -610,7 +610,7 @@
             position: absolute;
             top: 0; left: 20%; right: 20%;
             height: 1px;
-            background: linear-gradient(90deg, transparent, var(--cyan), var(--accent), transparent);
+            background: linear-gradient(90deg, transparent, var(--cyan), #fff, var(--accent), transparent);
             opacity: 0.4;
         }
 
@@ -779,7 +779,7 @@
             position: absolute;
             left: 0; right: 0;
             height: 2px;
-            background: linear-gradient(90deg, transparent, var(--cyan), var(--accent), transparent);
+            background: linear-gradient(90deg, transparent, var(--cyan), #fff, var(--accent), transparent);
             opacity: 0.3;
             animation: login-scan 4s ease-in-out infinite;
             z-index: 2;
@@ -862,7 +862,7 @@
             position: absolute;
             top: 0; left: 10%; right: 10%;
             height: 1px;
-            background: linear-gradient(90deg, transparent, var(--cyan), var(--accent), transparent);
+            background: linear-gradient(90deg, transparent, var(--cyan), #fff, var(--accent), transparent);
             animation: glow-pulse 3s ease-in-out infinite;
         }
 
@@ -952,7 +952,7 @@
             bottom: 0; left: 0;
             width: 0;
             height: 1px;
-            background: linear-gradient(90deg, var(--cyan), var(--accent), transparent);
+            background: linear-gradient(90deg, #fff, var(--cyan), var(--accent), transparent);
             transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 

@@ -184,8 +184,15 @@
             position: absolute;
             top: 0; left: 10%; right: 10%;
             height: 1px;
-            background: linear-gradient(90deg, transparent, var(--cyan), #fff, var(--accent), transparent);
-            animation: glow-pulse 3s ease-in-out infinite;
+            background: linear-gradient(90deg, transparent 0%, var(--cyan) 20%, #fff 50%, var(--accent) 80%, transparent 100%);
+            background-size: 300% 100%;
+            animation: glow-swipe 4s ease-in-out infinite;
+        }
+
+        @keyframes glow-swipe {
+            0% { background-position: 100% 50%; opacity: 0.3; }
+            50% { background-position: 0% 50%; opacity: 1; }
+            100% { background-position: 100% 50%; opacity: 0.3; }
         }
 
         @keyframes glow-pulse {
@@ -273,7 +280,8 @@
             top: 0;
             bottom: 0;
             width: 2px;
-            background: linear-gradient(180deg, transparent, var(--cyan), #fff, var(--cyan), transparent);
+            background: linear-gradient(180deg, transparent 0%, var(--cyan) 20%, #fff 50%, var(--cyan) 80%, transparent 100%);
+            background-size: 100% 300%;
             transform: scaleY(0);
             transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             box-shadow: 0 0 12px var(--cyan), 0 0 24px var(--cyan-glow);
@@ -281,6 +289,13 @@
 
         .currency-row:has(.currency-input:focus)::before {
             transform: scaleY(1);
+            animation: bar-swipe-v 2s ease-in-out infinite;
+        }
+
+        @keyframes bar-swipe-v {
+            0% { background-position: 50% 100%; }
+            50% { background-position: 50% 0%; }
+            100% { background-position: 50% 100%; }
         }
 
         .currency-row:has(.currency-input:focus) {
@@ -359,19 +374,20 @@
         }
 
         .currency-row.focus-flicker::before {
-            animation: bar-flicker 0.5s ease-out forwards;
+            transform: scaleY(1);
+            animation: bar-flicker 0.5s ease-out;
         }
 
         @keyframes bar-flicker {
-            0% { transform: scaleY(0); opacity: 1; }
-            8% { transform: scaleY(0.7); opacity: 0.3; }
-            16% { transform: scaleY(0.4); opacity: 1; }
-            24% { transform: scaleY(0.9); opacity: 0.2; }
-            32% { transform: scaleY(0.6); opacity: 0.9; }
-            40% { transform: scaleY(1); opacity: 1; }
+            0% { opacity: 0; }
+            8% { opacity: 1; }
+            16% { opacity: 0.2; }
+            24% { opacity: 0.9; }
+            32% { opacity: 0.3; }
+            40% { opacity: 1; }
             55% { opacity: 0.7; }
             60% { opacity: 1; }
-            100% { transform: scaleY(1); opacity: 1; }
+            100% { opacity: 1; }
         }
 
         /* Default currency set flicker */
@@ -610,8 +626,10 @@
             position: absolute;
             top: 0; left: 20%; right: 20%;
             height: 1px;
-            background: linear-gradient(90deg, transparent, var(--cyan), #fff, var(--accent), transparent);
-            opacity: 0.4;
+            background: linear-gradient(90deg, transparent 0%, var(--cyan) 20%, #fff 50%, var(--accent) 80%, transparent 100%);
+            background-size: 300% 100%;
+            opacity: 0.5;
+            animation: glow-swipe 5s ease-in-out infinite;
         }
 
         @media (max-width: 480px) {
@@ -862,8 +880,9 @@
             position: absolute;
             top: 0; left: 10%; right: 10%;
             height: 1px;
-            background: linear-gradient(90deg, transparent, var(--cyan), #fff, var(--accent), transparent);
-            animation: glow-pulse 3s ease-in-out infinite;
+            background: linear-gradient(90deg, transparent 0%, var(--cyan) 20%, #fff 50%, var(--accent) 80%, transparent 100%);
+            background-size: 300% 100%;
+            animation: glow-swipe 4s ease-in-out infinite;
         }
 
         .login-icon {
@@ -952,12 +971,14 @@
             bottom: 0; left: 0;
             width: 0;
             height: 1px;
-            background: linear-gradient(90deg, #fff, var(--cyan), var(--accent), transparent);
+            background: linear-gradient(90deg, #fff 0%, var(--cyan) 30%, var(--accent) 70%, transparent 100%);
+            background-size: 300% 100%;
             transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .login-input:focus ~ .login-input-line {
             width: 100%;
+            animation: glow-swipe 3s ease-in-out infinite;
         }
 
         .login-btn {
@@ -1642,12 +1663,16 @@
                 // Show cursor only on focused row
                 document.querySelectorAll('.cursor-blink').forEach(c => c.style.display = 'none');
                 cursor.style.display = 'block';
-                // Flicker effect on row
-                row.classList.remove('focus-flicker');
+                // Clear flicker from all rows, then trigger on focused
+                document.querySelectorAll('.currency-row').forEach(r => r.classList.remove('focus-flicker'));
                 void row.offsetWidth;
                 row.classList.add('focus-flicker');
                 // Sweep effect on row
                 sweepRow(row);
+            });
+
+            input.addEventListener('blur', () => {
+                row.classList.remove('focus-flicker');
             });
 
             label.addEventListener('click', () => {

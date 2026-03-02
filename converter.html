@@ -32,7 +32,8 @@
         document.head.appendChild(link);
     </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Share+Tech+Mono&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Share+Tech+Mono&family=Product+Sans:wght@400;500;700&family=Google+Sans:wght@400;500;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
         :root {
             --cyan: #00e5ff;
@@ -60,7 +61,7 @@
         }
 
         body {
-            font-family: 'Share Tech Mono', monospace;
+            font-family: 'Google Sans', 'Product Sans', 'Inter', sans-serif;
             background: var(--bg-deep);
             min-height: 100dvh;
             min-height: 100vh;
@@ -97,7 +98,7 @@
         }
 
         .touch-ripple.fire {
-            animation: ripple-expand 0.6s cubic-bezier(0, 0.5, 0.3, 1) forwards;
+            animation: ripple-expand 1.8s cubic-bezier(0, 0.5, 0.3, 1) forwards;
         }
 
         .touch-ripple.orange {
@@ -190,9 +191,9 @@
 
         h1 {
             text-align: center;
-            font-family: 'Orbitron', sans-serif;
+            font-family: 'Google Sans', 'Product Sans', 'Inter', sans-serif;
             font-size: 1.1rem;
-            font-weight: 600;
+            font-weight: 700;
             letter-spacing: 0.3em;
             text-transform: uppercase;
             margin-bottom: 4px;
@@ -296,7 +297,7 @@
         }
 
         .currency-row.sweep::after {
-            animation: row-sweep 0.5s ease-out forwards;
+            animation: row-sweep 1.5s ease-out forwards;
         }
 
         @keyframes row-sweep {
@@ -306,7 +307,7 @@
 
         /* Value flash on update */
         .currency-input.value-flash {
-            animation: val-flash 0.35s ease-out;
+            animation: val-flash 1.05s ease-out;
         }
 
         @keyframes val-flash {
@@ -326,7 +327,7 @@
 
         /* Quick pulse on keypress */
         .currency-input.key-pulse {
-            animation: key-pulse 0.25s ease-out;
+            animation: key-pulse 0.75s ease-out;
         }
 
         @keyframes key-pulse {
@@ -369,7 +370,7 @@
         }
 
         .code {
-            font-family: 'Orbitron', sans-serif;
+            font-family: 'Google Sans', 'Product Sans', 'Inter', sans-serif;
             font-weight: 600;
             font-size: 0.75rem;
             color: var(--cyan);
@@ -394,7 +395,28 @@
             outline: none;
             transition: all 0.3s;
             text-align: right;
-            font-family: 'Share Tech Mono', monospace;
+            font-family: 'Google Sans', 'Product Sans', 'Inter', sans-serif;
+        }
+
+        /* Beating cursor for focused input */
+        .cursor-blink {
+            position: absolute;
+            right: 13px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 2px;
+            height: 1.1em;
+            background: var(--cyan);
+            border-radius: 1px;
+            pointer-events: none;
+            opacity: 0;
+            box-shadow: 0 0 6px var(--cyan), 0 0 12px var(--cyan-glow);
+            animation: cursor-beat 1s ease-in-out infinite;
+        }
+
+        @keyframes cursor-beat {
+            0%, 100% { opacity: 0; }
+            30%, 70% { opacity: 1; }
         }
 
         .currency-input:focus {
@@ -460,7 +482,7 @@
             padding: 4px 12px;
             border-radius: 2px;
             font-size: 0.65rem;
-            font-family: 'Share Tech Mono', monospace;
+            font-family: 'Google Sans', 'Product Sans', 'Inter', sans-serif;
             letter-spacing: 0.1em;
             text-transform: uppercase;
             cursor: pointer;
@@ -517,8 +539,8 @@
             border-radius: 2px;
             color: #fff;
             font-size: 1.25rem;
-            font-family: 'Share Tech Mono', monospace;
-            font-weight: 400;
+            font-family: 'Google Sans', 'Product Sans', 'Inter', sans-serif;
+            font-weight: 500;
             padding: 22px 0;
             min-width: 0;
             cursor: pointer;
@@ -531,7 +553,7 @@
         }
 
         .numpad-btn.btn-pop {
-            animation: btn-pop 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+            animation: btn-pop 1.35s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
         @keyframes btn-pop {
@@ -545,7 +567,7 @@
         }
 
         .numpad-btn.btn-pop-orange {
-            animation: btn-pop-orange 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+            animation: btn-pop-orange 1.35s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
         @keyframes btn-pop-orange {
@@ -569,7 +591,7 @@
         }
 
         .numpad-shockwave.fire {
-            animation: shockwave 0.6s cubic-bezier(0, 0.55, 0.45, 1) forwards;
+            animation: shockwave 1.8s cubic-bezier(0, 0.55, 0.45, 1) forwards;
         }
 
         .numpad-shockwave.orange {
@@ -586,7 +608,8 @@
             color: var(--orange);
             border-color: rgba(255, 109, 0, 0.15);
             font-size: 0.85rem;
-            font-family: 'Orbitron', sans-serif;
+            font-family: 'Google Sans', 'Product Sans', 'Inter', sans-serif;
+            font-weight: 600;
             letter-spacing: 0.15em;
         }
 
@@ -614,7 +637,7 @@
             position: fixed;
             top: 8px;
             right: 60px;
-            font-family: 'Share Tech Mono', monospace;
+            font-family: 'Google Sans', 'Product Sans', 'Inter', sans-serif;
             font-size: 0.55rem;
             color: rgba(0, 229, 255, 0.2);
             letter-spacing: 0.1em;
@@ -770,7 +793,7 @@
             ripple.style.top = (y - size / 2) + 'px';
             container.appendChild(ripple);
             requestAnimationFrame(() => ripple.classList.add('fire'));
-            setTimeout(() => ripple.remove(), 600);
+            setTimeout(() => ripple.remove(), 1800);
         }
 
         function createShockwave(container, x, y, isOrange) {
@@ -781,7 +804,7 @@
             ring.style.top = (y - 20) + 'px';
             container.appendChild(ring);
             requestAnimationFrame(() => ring.classList.add('fire'));
-            setTimeout(() => ring.remove(), 500);
+            setTimeout(() => ring.remove(), 1800);
         }
 
         function flashValue(input) {
@@ -914,7 +937,14 @@
         // Set up input listeners and tap-to-set-default
         currencies.forEach(currency => {
             const input = document.getElementById(currency);
-            const label = input.closest('.currency-row').querySelector('.currency-label');
+            const row = input.closest('.currency-row');
+            const label = row.querySelector('.currency-label');
+
+            // Add beating cursor element
+            const cursor = document.createElement('span');
+            cursor.className = 'cursor-blink';
+            cursor.style.display = 'none';
+            row.appendChild(cursor);
 
             input.addEventListener('input', () => {
                 activeField = currency;
@@ -926,8 +956,11 @@
                 // Remove breathing glow from all, add to focused
                 document.querySelectorAll('.currency-input').forEach(el => el.classList.remove('active-glow'));
                 input.classList.add('active-glow');
+                // Show cursor only on focused row
+                document.querySelectorAll('.cursor-blink').forEach(c => c.style.display = 'none');
+                cursor.style.display = 'block';
                 // Sweep effect on row
-                sweepRow(input.closest('.currency-row'));
+                sweepRow(row);
             });
 
             label.addEventListener('click', () => {

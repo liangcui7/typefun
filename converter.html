@@ -1664,6 +1664,10 @@
                 sweepRow(row);
             });
 
+            row.addEventListener('click', () => {
+                input.focus();
+            });
+
             label.addEventListener('click', () => {
                 setDefaultCurrency(currency);
             });

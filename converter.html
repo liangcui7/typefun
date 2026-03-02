@@ -685,7 +685,8 @@
             align-items: center;
             justify-content: center;
             flex-direction: column;
-            overflow: hidden;
+            overflow-x: hidden;
+            overflow-y: auto;
         }
 
         .login-overlay.unlocked {
@@ -768,7 +769,8 @@
             padding: 40px 32px;
             width: 100%;
             max-width: 380px;
-            margin: 0 20px;
+            margin: auto 20px;
+            flex-shrink: 0;
             animation: login-card-in 1s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
             opacity: 0;
             transform: translateY(30px) scale(0.95);
@@ -1299,6 +1301,24 @@
                 input.addEventListener('keydown', (e) => {
                     if (e.key === 'Enter') attemptLogin();
                 });
+
+                // Scroll login card into view when mobile keyboard opens
+                input.addEventListener('focus', () => {
+                    setTimeout(() => {
+                        input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 300);
+                });
+
+                // Also handle viewport resize (keyboard open/close)
+                if (window.visualViewport) {
+                    window.visualViewport.addEventListener('resize', () => {
+                        if (document.activeElement === input) {
+                            setTimeout(() => {
+                                input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            }, 100);
+                        }
+                    });
+                }
             }
         })();
 

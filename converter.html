@@ -399,6 +399,26 @@
             100% { transform: scale(1); box-shadow: 0 0 15px rgba(37,99,235,0.2), 0 0 30px rgba(37,99,235,0.08), inset 0 0 20px rgba(37,99,235,0.05); border-color: var(--cyan); background: rgba(37,99,235,0.07); }
         }
 
+        /* Wave ring expanding from input on keypress */
+        .input-wave {
+            position: absolute;
+            pointer-events: none;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 3px;
+            opacity: 0;
+            z-index: 5;
+        }
+
+        .input-wave.fire {
+            animation: input-wave-expand 0.6s cubic-bezier(0, 0.5, 0.3, 1) forwards;
+        }
+
+        @keyframes input-wave-expand {
+            0% { opacity: 0.5; transform: scale(1); border-color: rgba(255, 255, 255, 0.5); box-shadow: 0 0 8px rgba(37, 99, 235, 0.4); }
+            40% { opacity: 0.3; border-color: rgba(37, 99, 235, 0.3); }
+            100% { opacity: 0; transform: scale(1.15, 1.8); border-color: rgba(37, 99, 235, 0.1); box-shadow: none; }
+        }
+
         .currency-label {
             display: flex;
             align-items: center;
@@ -1490,6 +1510,22 @@
             input.classList.add('value-flash');
         }
 
+        function createInputWave(input) {
+            const row = input.closest('.currency-row');
+            const rect = input.getBoundingClientRect();
+            const rowRect = row.getBoundingClientRect();
+            const wave = document.createElement('div');
+            wave.className = 'input-wave';
+            wave.style.top = (rect.top - rowRect.top) + 'px';
+            wave.style.left = (rect.left - rowRect.left) + 'px';
+            wave.style.width = rect.width + 'px';
+            wave.style.height = rect.height + 'px';
+            row.appendChild(wave);
+            void wave.offsetWidth;
+            wave.classList.add('fire');
+            wave.addEventListener('animationend', () => wave.remove());
+        }
+
         function sweepRow(row) {
             row.classList.remove('sweep');
             void row.offsetWidth;
@@ -1634,6 +1670,8 @@
             });
 
             input.addEventListener('focus', () => {
+                // Skip full reset if already the active row
+                if (activeField === currency && row.classList.contains('active-row')) return;
                 activeField = currency;
                 // Remove active-row and breathing glow from all rows
                 document.querySelectorAll('.currency-row').forEach(r => r.classList.remove('active-row', 'focus-flicker'));
@@ -1705,6 +1743,9 @@
 
                 // Flash the active input
                 flashValue(input);
+
+                // Wave ring expanding from input
+                createInputWave(input);
 
                 // Pulse the input field border/glow
                 input.classList.remove('active-glow', 'key-pulse');

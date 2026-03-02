@@ -1207,7 +1207,19 @@
         // === LOGIN / AUTHENTICATION ===
         (function() {
             const AUTH_KEY = 'currencyConverterAuth';
-            const ALLOWED = ['allison lee', 'liang cui', 'alan lee', 'andy lee', 'angelique ramos'];
+            const ALLOWED_HASHES = [
+                '5de1bc0fc427161d264aca46e3e2978932a0235124b79db4ced52f7b71241777',
+                'a435f27a3fc54a8db4b3184cb4ef4edef3dee19307eb521ca7171df347fb33c2',
+                '3606e12a94e358f0e8afd0623b7742280e0d9fe3b0d2e1b984e6182eb49cba04',
+                '3aac28c6a5be9fc5216da777b319f4579acc2c6c1c5c2a93c0d0269d605983d1',
+                'c3ee50788723922287c2ae33eeb3e391d06208c1c696817019425a5c03d5d893'
+            ];
+
+            async function hashName(name) {
+                const data = new TextEncoder().encode(name);
+                const buf = await crypto.subtle.digest('SHA-256', data);
+                return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+            }
 
             // Check if already authenticated
             if (localStorage.getItem(AUTH_KEY)) {
@@ -1234,14 +1246,15 @@
                 const welcomeEl = document.getElementById('loginWelcome');
                 const overlay = document.getElementById('loginOverlay');
 
-                function attemptLogin() {
+                async function attemptLogin() {
                     const name = input.value.trim();
                     if (!name) {
                         showError('Please enter your name');
                         return;
                     }
 
-                    if (ALLOWED.includes(name.toLowerCase())) {
+                    const nameHash = await hashName(name.toLowerCase());
+                    if (ALLOWED_HASHES.includes(nameHash)) {
                         // Success
                         input.classList.add('login-success');
                         errorEl.textContent = '';

@@ -98,7 +98,7 @@
         }
 
         .touch-ripple.fire {
-            animation: ripple-expand 1.8s cubic-bezier(0, 0.5, 0.3, 1) forwards;
+            animation: ripple-expand 0.6s cubic-bezier(0, 0.5, 0.3, 1) forwards;
         }
 
         .touch-ripple.orange {
@@ -297,7 +297,7 @@
         }
 
         .currency-row.sweep::after {
-            animation: row-sweep 1.5s ease-out forwards;
+            animation: row-sweep 0.5s ease-out forwards;
         }
 
         @keyframes row-sweep {
@@ -307,7 +307,7 @@
 
         /* Value flash on update */
         .currency-input.value-flash {
-            animation: val-flash 1.05s ease-out;
+            animation: val-flash 0.35s ease-out;
         }
 
         @keyframes val-flash {
@@ -327,12 +327,12 @@
 
         /* Quick pulse on keypress */
         .currency-input.key-pulse {
-            animation: key-pulse 0.75s ease-out;
+            animation: key-pulse 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         @keyframes key-pulse {
-            0% { box-shadow: 0 0 18px rgba(0,229,255,0.5), 0 0 40px rgba(0,229,255,0.25), inset 0 0 20px rgba(0,229,255,0.1); border-color: rgba(0,229,255,0.6); }
-            100% { box-shadow: 0 0 12px rgba(0,229,255,0.12), 0 0 25px rgba(0,229,255,0.05), inset 0 0 15px rgba(0,229,255,0.03); border-color: rgba(0,229,255,0.15); }
+            0% { transform: scale(1.03); box-shadow: 0 0 30px rgba(0,229,255,0.7), 0 0 60px rgba(0,229,255,0.35), inset 0 0 25px rgba(0,229,255,0.15); border-color: rgba(0,229,255,0.9); background: rgba(0,229,255,0.08); }
+            100% { transform: scale(1); box-shadow: 0 0 12px rgba(0,229,255,0.12), 0 0 25px rgba(0,229,255,0.05), inset 0 0 15px rgba(0,229,255,0.03); border-color: rgba(0,229,255,0.15); background: rgba(0,229,255,0.03); }
         }
 
         .currency-label {
@@ -411,7 +411,7 @@
             pointer-events: none;
             opacity: 0;
             box-shadow: 0 0 6px var(--cyan), 0 0 12px var(--cyan-glow);
-            animation: cursor-beat 1s ease-in-out infinite;
+            animation: cursor-beat 0.33s ease-in-out infinite;
         }
 
         @keyframes cursor-beat {
@@ -553,7 +553,7 @@
         }
 
         .numpad-btn.btn-pop {
-            animation: btn-pop 1.35s cubic-bezier(0.22, 1, 0.36, 1);
+            animation: btn-pop 0.45s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
         @keyframes btn-pop {
@@ -567,7 +567,7 @@
         }
 
         .numpad-btn.btn-pop-orange {
-            animation: btn-pop-orange 1.35s cubic-bezier(0.22, 1, 0.36, 1);
+            animation: btn-pop-orange 0.45s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
         @keyframes btn-pop-orange {
@@ -591,7 +591,7 @@
         }
 
         .numpad-shockwave.fire {
-            animation: shockwave 1.8s cubic-bezier(0, 0.55, 0.45, 1) forwards;
+            animation: shockwave 0.6s cubic-bezier(0, 0.55, 0.45, 1) forwards;
         }
 
         .numpad-shockwave.orange {
@@ -793,7 +793,7 @@
             ripple.style.top = (y - size / 2) + 'px';
             container.appendChild(ripple);
             requestAnimationFrame(() => ripple.classList.add('fire'));
-            setTimeout(() => ripple.remove(), 1800);
+            setTimeout(() => ripple.remove(), 600);
         }
 
         function createShockwave(container, x, y, isOrange) {
@@ -804,7 +804,7 @@
             ring.style.top = (y - 20) + 'px';
             container.appendChild(ring);
             requestAnimationFrame(() => ring.classList.add('fire'));
-            setTimeout(() => ring.remove(), 1800);
+            setTimeout(() => ring.remove(), 600);
         }
 
         function flashValue(input) {

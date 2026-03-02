@@ -521,25 +521,31 @@
         }
 
         .numpad-btn.btn-pop {
-            animation: btn-pop 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            animation: btn-pop 0.45s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
         @keyframes btn-pop {
-            0% { transform: scale(1); }
-            30% { transform: scale(0.88); background: rgba(0, 229, 255, 0.2); border-color: var(--cyan); box-shadow: 0 0 20px var(--cyan-glow); }
-            60% { transform: scale(1.04); }
-            100% { transform: scale(1); }
+            0% { transform: scale(1); box-shadow: none; }
+            12% { transform: scale(0.82); background: rgba(0, 229, 255, 0.25); border-color: var(--cyan); box-shadow: 0 0 24px var(--cyan-glow), inset 0 0 12px rgba(0, 229, 255, 0.1); }
+            20% { transform: scale(0.82); background: rgba(0, 229, 255, 0.2); }
+            45% { transform: scale(1.08); box-shadow: 0 0 16px var(--cyan-glow); }
+            65% { transform: scale(0.97); }
+            80% { transform: scale(1.02); box-shadow: 0 0 6px var(--cyan-glow); }
+            100% { transform: scale(1); box-shadow: none; }
         }
 
         .numpad-btn.btn-pop-orange {
-            animation: btn-pop-orange 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            animation: btn-pop-orange 0.45s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
         @keyframes btn-pop-orange {
-            0% { transform: scale(1); }
-            30% { transform: scale(0.88); background: rgba(255, 109, 0, 0.25); border-color: var(--orange); box-shadow: 0 0 20px var(--orange-glow); }
-            60% { transform: scale(1.04); }
-            100% { transform: scale(1); }
+            0% { transform: scale(1); box-shadow: none; }
+            12% { transform: scale(0.82); background: rgba(255, 109, 0, 0.3); border-color: var(--orange); box-shadow: 0 0 24px var(--orange-glow), inset 0 0 12px rgba(255, 109, 0, 0.1); }
+            20% { transform: scale(0.82); background: rgba(255, 109, 0, 0.25); }
+            45% { transform: scale(1.08); box-shadow: 0 0 16px var(--orange-glow); }
+            65% { transform: scale(0.97); }
+            80% { transform: scale(1.02); box-shadow: 0 0 6px var(--orange-glow); }
+            100% { transform: scale(1); box-shadow: none; }
         }
 
         /* Shockwave ring on press */
@@ -553,7 +559,7 @@
         }
 
         .numpad-shockwave.fire {
-            animation: shockwave 0.5s ease-out forwards;
+            animation: shockwave 0.6s cubic-bezier(0, 0.55, 0.45, 1) forwards;
         }
 
         .numpad-shockwave.orange {
@@ -561,7 +567,9 @@
         }
 
         @keyframes shockwave {
-            to { transform: scale(3); opacity: 0; }
+            0% { transform: scale(0); opacity: 0.7; }
+            60% { opacity: 0.3; }
+            100% { transform: scale(3.5); opacity: 0; }
         }
 
         .numpad-btn.clear-btn {

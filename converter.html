@@ -253,6 +253,7 @@
         .currency-row:nth-child(4) { animation-delay: 0.25s; }
         .currency-row:nth-child(5) { animation-delay: 0.3s; }
         .currency-row:nth-child(6) { animation-delay: 0.35s; }
+        .currency-row:nth-child(7) { animation-delay: 0.4s; }
 
         @keyframes row-in {
             to { opacity: 1; transform: translateX(0); }
@@ -753,6 +754,18 @@
 
         <div class="currency-row">
             <div class="currency-label" data-currency-label>
+                <span class="flag">&#127477;&#127469;</span>
+                <div>
+                    <div class="code">PHP</div>
+                    <div class="currency-name">Philippine Peso</div>
+                    <span class="default-star">Default</span>
+                </div>
+            </div>
+            <input type="text" inputmode="none" readonly class="currency-input" id="PHP" placeholder="0.00">
+        </div>
+
+        <div class="currency-row">
+            <div class="currency-label" data-currency-label>
                 <span class="flag">&#127480;&#127468;</span>
                 <div>
                     <div class="code">SGD</div>
@@ -905,7 +918,7 @@
         }
 
         // === CORE LOGIC ===
-        const currencies = ['TWD', 'USD', 'CAD', 'CNY', 'JPY', 'SGD'];
+        const currencies = ['TWD', 'USD', 'CAD', 'CNY', 'JPY', 'PHP', 'SGD'];
         const DEFAULT_CURRENCY_KEY = 'defaultCurrency';
 
         const staticRates = {
@@ -914,6 +927,7 @@
             CAD: 1.36,
             CNY: 7.25,
             JPY: 149.5,
+            PHP: 56.5,
             SGD: 1.34
         };
 

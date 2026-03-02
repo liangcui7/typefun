@@ -324,6 +324,16 @@
             50% { box-shadow: 0 0 20px rgba(0,229,255,0.25), 0 0 40px rgba(0,229,255,0.1), inset 0 0 25px rgba(0,229,255,0.06); }
         }
 
+        /* Quick pulse on keypress */
+        .currency-input.key-pulse {
+            animation: key-pulse 0.25s ease-out;
+        }
+
+        @keyframes key-pulse {
+            0% { box-shadow: 0 0 18px rgba(0,229,255,0.5), 0 0 40px rgba(0,229,255,0.25), inset 0 0 20px rgba(0,229,255,0.1); border-color: rgba(0,229,255,0.6); }
+            100% { box-shadow: 0 0 12px rgba(0,229,255,0.12), 0 0 25px rgba(0,229,255,0.05), inset 0 0 15px rgba(0,229,255,0.03); border-color: rgba(0,229,255,0.15); }
+        }
+
         .currency-label {
             display: flex;
             align-items: center;
@@ -971,6 +981,15 @@
 
                 // Flash the active input
                 flashValue(input);
+
+                // Pulse the input field border/glow
+                input.classList.remove('active-glow', 'key-pulse');
+                void input.offsetWidth;
+                input.classList.add('key-pulse');
+                input.addEventListener('animationend', () => {
+                    input.classList.remove('key-pulse');
+                    input.classList.add('active-glow');
+                }, { once: true });
             });
         });
 

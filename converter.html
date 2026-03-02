@@ -88,6 +88,21 @@
             align-items: center;
             gap: 6px;
             min-width: 90px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .currency-label .default-star {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            font-size: 0.55rem;
+            color: #4fc3f7;
+            display: none;
+        }
+
+        .currency-label.is-default .default-star {
+            display: block;
         }
 
         .flag {
@@ -184,7 +199,8 @@
         <p class="subtitle">Type in any field to convert</p>
 
         <div class="currency-row">
-            <div class="currency-label">
+            <div class="currency-label" data-currency-label>
+                <span class="default-star">&#9733;</span>
                 <span class="flag">🇹🇼</span>
                 <div>
                     <div class="code">TWD</div>
@@ -195,7 +211,8 @@
         </div>
 
         <div class="currency-row">
-            <div class="currency-label">
+            <div class="currency-label" data-currency-label>
+                <span class="default-star">&#9733;</span>
                 <span class="flag">🇺🇸</span>
                 <div>
                     <div class="code">USD</div>
@@ -206,7 +223,8 @@
         </div>
 
         <div class="currency-row">
-            <div class="currency-label">
+            <div class="currency-label" data-currency-label>
+                <span class="default-star">&#9733;</span>
                 <span class="flag">🇨🇦</span>
                 <div>
                     <div class="code">CAD</div>
@@ -217,7 +235,8 @@
         </div>
 
         <div class="currency-row">
-            <div class="currency-label">
+            <div class="currency-label" data-currency-label>
+                <span class="default-star">&#9733;</span>
                 <span class="flag">🇨🇳</span>
                 <div>
                     <div class="code">CNY</div>
@@ -228,7 +247,8 @@
         </div>
 
         <div class="currency-row">
-            <div class="currency-label">
+            <div class="currency-label" data-currency-label>
+                <span class="default-star">&#9733;</span>
                 <span class="flag">🇯🇵</span>
                 <div>
                     <div class="code">JPY</div>
@@ -239,7 +259,8 @@
         </div>
 
         <div class="currency-row">
-            <div class="currency-label">
+            <div class="currency-label" data-currency-label>
+                <span class="default-star">&#9733;</span>
                 <span class="flag">🇸🇬</span>
                 <div>
                     <div class="code">SGD</div>
@@ -258,6 +279,7 @@
 
     <script>
         const currencies = ['TWD', 'USD', 'CAD', 'CNY', 'JPY', 'SGD'];
+        const DEFAULT_CURRENCY_KEY = 'defaultCurrency';
 
         // Static fallback rates (per 1 USD)
         const staticRates = {
@@ -272,6 +294,19 @@
         let rates = { ...staticRates };
         let isLive = false;
         let activeField = null;
+
+        function getDefaultCurrency() {
+            return localStorage.getItem(DEFAULT_CURRENCY_KEY) || 'TWD';
+        }
+
+        function setDefaultCurrency(code) {
+            localStorage.setItem(DEFAULT_CURRENCY_KEY, code);
+            document.querySelectorAll('.currency-label').forEach(el => {
+                el.classList.remove('is-default');
+            });
+            const row = document.getElementById(code).closest('.currency-row');
+            row.querySelector('.currency-label').classList.add('is-default');
+        }
 
         async function fetchRates() {
             const statusDot = document.getElementById('statusDot');
@@ -336,9 +371,10 @@
             });
         }
 
-        // Set up input listeners
+        // Set up input listeners and tap-to-set-default
         currencies.forEach(currency => {
             const input = document.getElementById(currency);
+            const label = input.closest('.currency-row').querySelector('.currency-label');
 
             input.addEventListener('input', () => {
                 activeField = currency;
@@ -348,7 +384,19 @@
             input.addEventListener('focus', () => {
                 activeField = currency;
             });
+
+            // Tap label to set as default
+            label.addEventListener('click', () => {
+                setDefaultCurrency(currency);
+            });
         });
+
+        // Mark default and auto-focus on load
+        const defaultCurrency = getDefaultCurrency();
+        setDefaultCurrency(defaultCurrency);
+        setTimeout(() => {
+            document.getElementById(defaultCurrency).focus();
+        }, 300);
 
         // Fetch live rates on load
         fetchRates();

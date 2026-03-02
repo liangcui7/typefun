@@ -210,7 +210,7 @@
         }
 
         #titleText {
-            transition: opacity 0.8s ease;
+            transition: opacity 1s ease;
         }
 
         .subtitle {
@@ -1408,14 +1408,22 @@
             el.textContent = titles[0];
             el.style.opacity = '1';
 
-            setInterval(() => {
-                el.style.opacity = '0';
+            function cycleTitles() {
                 setTimeout(() => {
-                    titleIdx = (titleIdx + 1) % titles.length;
-                    el.textContent = titles[titleIdx];
-                    el.style.opacity = '1';
-                }, 800);
-            }, 4000);
+                    // 2s fade out
+                    el.style.transition = 'opacity 2s ease';
+                    el.style.opacity = '0';
+                    setTimeout(() => {
+                        titleIdx = (titleIdx + 1) % titles.length;
+                        el.textContent = titles[titleIdx];
+                        // 1s fade in
+                        el.style.transition = 'opacity 1s ease';
+                        el.style.opacity = '1';
+                        cycleTitles();
+                    }, 2000);
+                }, 3000);
+            }
+            cycleTitles();
         })();
 
         // === PARTICLES ===

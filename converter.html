@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currency Converter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #e0e0e0;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 40px;
+            width: 100%;
+            max-width: 480px;
+            margin: 20px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #8899aa;
+            margin-bottom: 32px;
+        }
+
+        .currency-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .currency-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 100px;
+        }
+
+        .flag {
+            font-size: 1.4rem;
+            line-height: 1;
+        }
+
+        .code {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #ccd6e0;
+        }
+
+        .currency-name {
+            font-size: 0.75rem;
+            color: #667788;
+        }
+
+        .currency-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            padding: 14px 16px;
+            font-size: 1.1rem;
+            color: #fff;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            text-align: right;
+            font-family: 'SF Mono', 'Fira Code', monospace;
+        }
+
+        .currency-input:focus {
+            border-color: #4fc3f7;
+            box-shadow: 0 0 0 3px rgba(79, 195, 247, 0.15);
+        }
+
+        .currency-input::placeholder {
+            color: #556677;
+        }
+
+        .status {
+            text-align: center;
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .status-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 6px;
+            vertical-align: middle;
+        }
+
+        .status-dot.live {
+            background: #4caf50;
+            box-shadow: 0 0 6px #4caf50;
+        }
+
+        .status-dot.static {
+            background: #ff9800;
+            box-shadow: 0 0 6px #ff9800;
+        }
+
+        .status-text {
+            font-size: 0.75rem;
+            color: #667788;
+        }
+
+        .refresh-btn {
+            background: none;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #8899aa;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: all 0.2s;
+        }
+
+        .refresh-btn:hover {
+            border-color: #4fc3f7;
+            color: #4fc3f7;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Currency Converter</h1>
+        <p class="subtitle">Type in any field to convert</p>
+
+        <div class="currency-row">
+            <div class="currency-label">
+                <span class="flag">🇺🇸</span>
+                <div>
+                    <div class="code">USD</div>
+                    <div class="currency-name">US Dollar</div>
+                </div>
+            </div>
+            <input type="text" inputmode="decimal" class="currency-input" id="USD" placeholder="0.00">
+        </div>
+
+        <div class="currency-row">
+            <div class="currency-label">
+                <span class="flag">🇹🇼</span>
+                <div>
+                    <div class="code">TWD</div>
+                    <div class="currency-name">NT Dollar</div>
+                </div>
+            </div>
+            <input type="text" inputmode="decimal" class="currency-input" id="TWD" placeholder="0.00">
+        </div>
+
+        <div class="currency-row">
+            <div class="currency-label">
+                <span class="flag">🇨🇳</span>
+                <div>
+                    <div class="code">CNY</div>
+                    <div class="currency-name">Chinese Yuan</div>
+                </div>
+            </div>
+            <input type="text" inputmode="decimal" class="currency-input" id="CNY" placeholder="0.00">
+        </div>
+
+        <div class="currency-row">
+            <div class="currency-label">
+                <span class="flag">🇯🇵</span>
+                <div>
+                    <div class="code">JPY</div>
+                    <div class="currency-name">Japanese Yen</div>
+                </div>
+            </div>
+            <input type="text" inputmode="decimal" class="currency-input" id="JPY" placeholder="0.00">
+        </div>
+
+        <div class="currency-row">
+            <div class="currency-label">
+                <span class="flag">🇨🇦</span>
+                <div>
+                    <div class="code">CAD</div>
+                    <div class="currency-name">Canadian Dollar</div>
+                </div>
+            </div>
+            <input type="text" inputmode="decimal" class="currency-input" id="CAD" placeholder="0.00">
+        </div>
+
+        <div class="status">
+            <span class="status-dot" id="statusDot"></span>
+            <span class="status-text" id="statusText">Loading rates...</span>
+            <button class="refresh-btn" onclick="fetchRates()">Refresh</button>
+        </div>
+    </div>
+
+    <script>
+        const currencies = ['USD', 'TWD', 'CNY', 'JPY', 'CAD'];
+
+        // Static fallback rates (per 1 USD)
+        const staticRates = {
+            USD: 1,
+            TWD: 32.5,
+            CNY: 7.25,
+            JPY: 149.5,
+            CAD: 1.36
+        };
+
+        let rates = { ...staticRates };
+        let isLive = false;
+        let activeField = null;
+
+        async function fetchRates() {
+            const statusDot = document.getElementById('statusDot');
+            const statusText = document.getElementById('statusText');
+
+            try {
+                const res = await fetch('https://open.er-api.com/v6/latest/USD');
+                const data = await res.json();
+
+                if (data.result === 'success') {
+                    rates.USD = 1;
+                    rates.TWD = data.rates.TWD;
+                    rates.CNY = data.rates.CNY;
+                    rates.JPY = data.rates.JPY;
+                    rates.CAD = data.rates.CAD;
+                    isLive = true;
+
+                    statusDot.className = 'status-dot live';
+                    const updated = new Date(data.time_last_update_utc).toLocaleDateString();
+                    statusText.textContent = `Live rates \u00b7 Updated ${updated}`;
+
+                    // Re-convert active field if there's a value
+                    if (activeField) {
+                        convert(activeField);
+                    }
+                } else {
+                    throw new Error('API returned error');
+                }
+            } catch {
+                rates = { ...staticRates };
+                isLive = false;
+                statusDot.className = 'status-dot static';
+                statusText.textContent = 'Using static rates (API unavailable)';
+            }
+        }
+
+        function convert(sourceCurrency) {
+            const sourceInput = document.getElementById(sourceCurrency);
+            const rawValue = sourceInput.value.replace(/,/g, '');
+            const value = parseFloat(rawValue);
+
+            if (isNaN(value) || rawValue.trim() === '') {
+                currencies.forEach(c => {
+                    if (c !== sourceCurrency) {
+                        document.getElementById(c).value = '';
+                    }
+                });
+                return;
+            }
+
+            // Convert source to USD first, then to each target
+            const valueInUSD = value / rates[sourceCurrency];
+
+            currencies.forEach(c => {
+                if (c !== sourceCurrency) {
+                    const converted = valueInUSD * rates[c];
+                    // JPY typically shown without decimals, others with 2
+                    const decimals = c === 'JPY' ? 0 : 2;
+                    document.getElementById(c).value = converted.toFixed(decimals);
+                }
+            });
+        }
+
+        // Set up input listeners
+        currencies.forEach(currency => {
+            const input = document.getElementById(currency);
+
+            input.addEventListener('input', () => {
+                activeField = currency;
+                convert(currency);
+            });
+
+            input.addEventListener('focus', () => {
+                activeField = currency;
+            });
+        });
+
+        // Fetch live rates on load
+        fetchRates();
+    </script>
+</body>
+</html>

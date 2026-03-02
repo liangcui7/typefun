@@ -1644,9 +1644,13 @@
                 // Skip full reset if already the active row
                 if (activeField === currency && row.classList.contains('active-row')) return;
                 activeField = currency;
-                // Remove active-row and breathing glow from all rows
+                // Remove active-row and all glow/pulse from all rows
                 document.querySelectorAll('.currency-row').forEach(r => r.classList.remove('active-row', 'focus-flicker'));
-                document.querySelectorAll('.currency-input').forEach(el => el.classList.remove('active-glow'));
+                document.querySelectorAll('.currency-input').forEach(el => {
+                    el.classList.remove('active-glow', 'key-pulse');
+                    el.style.borderColor = '';
+                    el.style.boxShadow = '';
+                });
                 // Activate this row
                 row.classList.add('active-row');
                 input.classList.add('active-glow');

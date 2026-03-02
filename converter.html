@@ -394,9 +394,26 @@
         // Mark default and auto-focus on load
         const defaultCurrency = getDefaultCurrency();
         setDefaultCurrency(defaultCurrency);
-        setTimeout(() => {
-            document.getElementById(defaultCurrency).focus();
-        }, 300);
+
+        // Mobile browsers require user gesture to open keyboard.
+        // Try programmatic focus first (works on desktop & some PWAs),
+        // then fall back to focusing on first touch anywhere on the page.
+        const defaultInput = document.getElementById(defaultCurrency);
+        defaultInput.setAttribute('autofocus', '');
+        setTimeout(() => { defaultInput.focus(); }, 300);
+
+        let hasFocused = false;
+        document.addEventListener('touchstart', function onFirstTouch() {
+            if (!hasFocused) {
+                hasFocused = true;
+                const cur = getDefaultCurrency();
+                const input = document.getElementById(cur);
+                if (document.activeElement !== input && !document.activeElement.classList.contains('currency-input')) {
+                    input.focus();
+                }
+            }
+            document.removeEventListener('touchstart', onFirstTouch);
+        }, { once: true });
 
         // Fetch live rates on load
         fetchRates();

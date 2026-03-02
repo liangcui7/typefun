@@ -63,7 +63,6 @@
             align-items: flex-start;
             justify-content: center;
             color: var(--text);
-            padding-bottom: 300px;
             overflow-x: hidden;
             overscroll-behavior: none;
         }
@@ -137,10 +136,10 @@
             background: var(--bg-panel);
             border: 1px solid var(--border);
             border-radius: 2px;
-            padding: 24px;
+            padding: 20px 16px;
             width: 100%;
             max-width: 480px;
-            margin: 20px;
+            margin: 12px;
             animation: container-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
             opacity: 0;
             transform: translateY(20px);
@@ -469,14 +468,12 @@
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 4px;
-            padding: 10px 12px;
-            padding-bottom: max(10px, env(safe-area-inset-bottom));
+            padding: 8px 10px;
+            padding-bottom: max(8px, env(safe-area-inset-bottom));
             background: linear-gradient(180deg, rgba(5, 10, 14, 0.95), rgba(8, 15, 22, 0.98));
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border-top: 1px solid var(--border);
-            max-width: 480px;
-            margin: 0 auto;
             z-index: 50;
             transform: translateZ(0);
             -webkit-transform: translateZ(0);
@@ -493,7 +490,10 @@
         }
 
         @media (max-width: 480px) {
-            .numpad { max-width: 100%; }
+            .container {
+                margin: 8px;
+                padding: 16px 12px;
+            }
         }
 
         .numpad-btn {
@@ -501,10 +501,10 @@
             border: 1px solid rgba(0, 229, 255, 0.08);
             border-radius: 2px;
             color: #fff;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-family: 'Orbitron', sans-serif;
             font-weight: 400;
-            padding: 16px 0;
+            padding: 18px 0;
             cursor: pointer;
             transition: all 0.12s cubic-bezier(0.16, 1, 0.3, 1);
             user-select: none;
@@ -581,8 +581,8 @@
         }
         .hud-corner.tl { top: 12px; left: 12px; border-width: 1px 0 0 1px; }
         .hud-corner.tr { top: 12px; right: 12px; border-width: 1px 1px 0 0; }
-        .hud-corner.bl { bottom: 270px; left: 12px; border-width: 0 0 1px 1px; }
-        .hud-corner.br { bottom: 270px; right: 12px; border-width: 0 1px 1px 0; }
+        .hud-corner.bl { display: none; }
+        .hud-corner.br { display: none; }
 
         /* Data readout line */
         .data-line {

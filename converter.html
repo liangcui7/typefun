@@ -366,7 +366,6 @@
             padding: 1px 4px;
             border-radius: 2px;
             position: relative;
-            margin-top: 1px;
             z-index: 1;
         }
 
@@ -405,6 +404,9 @@
             font-size: 0.75rem;
             color: var(--cyan);
             letter-spacing: 0.1em;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
 
         .currency-name {
@@ -696,9 +698,8 @@
             <div class="currency-label" data-currency-label>
                 <span class="flag">&#127481;&#127484;</span>
                 <div>
-                    <div class="code">TWD</div>
+                    <div class="code">TWD <span class="default-star">Default</span></div>
                     <div class="currency-name">NT Dollar</div>
-                    <span class="default-star">Default</span>
                 </div>
             </div>
             <input type="text" inputmode="none" readonly class="currency-input" id="TWD" placeholder="0.00">
@@ -708,9 +709,8 @@
             <div class="currency-label" data-currency-label>
                 <span class="flag">&#127482;&#127480;</span>
                 <div>
-                    <div class="code">USD</div>
+                    <div class="code">USD <span class="default-star">Default</span></div>
                     <div class="currency-name">US Dollar</div>
-                    <span class="default-star">Default</span>
                 </div>
             </div>
             <input type="text" inputmode="none" readonly class="currency-input" id="USD" placeholder="0.00">
@@ -720,9 +720,8 @@
             <div class="currency-label" data-currency-label>
                 <span class="flag">&#127464;&#127462;</span>
                 <div>
-                    <div class="code">CAD</div>
+                    <div class="code">CAD <span class="default-star">Default</span></div>
                     <div class="currency-name">Canadian Dollar</div>
-                    <span class="default-star">Default</span>
                 </div>
             </div>
             <input type="text" inputmode="none" readonly class="currency-input" id="CAD" placeholder="0.00">
@@ -732,9 +731,8 @@
             <div class="currency-label" data-currency-label>
                 <span class="flag">&#127464;&#127475;</span>
                 <div>
-                    <div class="code">CNY</div>
+                    <div class="code">CNY <span class="default-star">Default</span></div>
                     <div class="currency-name">Chinese Yuan</div>
-                    <span class="default-star">Default</span>
                 </div>
             </div>
             <input type="text" inputmode="none" readonly class="currency-input" id="CNY" placeholder="0.00">
@@ -744,9 +742,8 @@
             <div class="currency-label" data-currency-label>
                 <span class="flag">&#127471;&#127477;</span>
                 <div>
-                    <div class="code">JPY</div>
+                    <div class="code">JPY <span class="default-star">Default</span></div>
                     <div class="currency-name">Japanese Yen</div>
-                    <span class="default-star">Default</span>
                 </div>
             </div>
             <input type="text" inputmode="none" readonly class="currency-input" id="JPY" placeholder="0.00">
@@ -756,9 +753,8 @@
             <div class="currency-label" data-currency-label>
                 <span class="flag">&#127477;&#127469;</span>
                 <div>
-                    <div class="code">PHP</div>
+                    <div class="code">PHP <span class="default-star">Default</span></div>
                     <div class="currency-name">Philippine Peso</div>
-                    <span class="default-star">Default</span>
                 </div>
             </div>
             <input type="text" inputmode="none" readonly class="currency-input" id="PHP" placeholder="0.00">
@@ -768,9 +764,8 @@
             <div class="currency-label" data-currency-label>
                 <span class="flag">&#127480;&#127468;</span>
                 <div>
-                    <div class="code">SGD</div>
+                    <div class="code">SGD <span class="default-star">Default</span></div>
                     <div class="currency-name">Singapore Dollar</div>
-                    <span class="default-star">Default</span>
                 </div>
             </div>
             <input type="text" inputmode="none" readonly class="currency-input" id="SGD" placeholder="0.00">

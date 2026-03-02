@@ -1155,9 +1155,9 @@
                 </svg>
             </div>
             <div class="login-title">Identity Verification</div>
-            <div class="login-subtitle">Enter authorized credentials to continue</div>
+            <div class="login-subtitle">Enter your real full name to continue</div>
             <div class="login-input-wrapper">
-                <input type="text" class="login-input" id="loginInput" placeholder="Enter your full name" autocomplete="off" spellcheck="false">
+                <input type="text" class="login-input" id="loginInput" placeholder="Your real name (first and last)" autocomplete="off" spellcheck="false">
                 <div class="login-input-line"></div>
             </div>
             <button class="login-btn" id="loginBtn">Authenticate</button>
@@ -1328,7 +1328,7 @@
                 async function attemptLogin() {
                     const name = input.value.trim();
                     if (!name) {
-                        showError('Please enter your name');
+                        showError('Please enter your real full name');
                         return;
                     }
 
@@ -1361,7 +1361,7 @@
                             }, 1200);
                         }, 1000);
                     } else {
-                        showError('Access denied — unauthorized identity');
+                        showError('Not recognized — please use your real name');
                         input.classList.add('login-error-glow');
                         setTimeout(() => input.classList.remove('login-error-glow'), 300);
                     }

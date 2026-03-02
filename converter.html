@@ -194,18 +194,27 @@
             font-family: 'Google Sans', 'Product Sans', 'Inter', sans-serif;
             font-size: 1.1rem;
             font-weight: 700;
-            letter-spacing: 0.3em;
-            text-transform: uppercase;
+            letter-spacing: 0.15em;
             margin-bottom: 4px;
             color: #fff;
             text-shadow: 0 0 20px var(--cyan-glow);
-            animation: title-in 1s ease forwards;
-            opacity: 0;
+            min-height: 1.6em;
         }
 
-        @keyframes title-in {
-            0% { opacity: 0; letter-spacing: 0.8em; }
-            100% { opacity: 1; letter-spacing: 0.3em; }
+        h1 .title-cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1em;
+            background: var(--cyan);
+            margin-left: 3px;
+            vertical-align: text-bottom;
+            animation: title-cursor-blink 0.5s step-end infinite;
+            box-shadow: 0 0 6px var(--cyan), 0 0 12px var(--cyan-glow);
+        }
+
+        @keyframes title-cursor-blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
         }
 
         .subtitle {
@@ -339,7 +348,8 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            min-width: 90px;
+            width: 110px;
+            flex-shrink: 0;
             cursor: pointer;
             position: relative;
         }
@@ -659,7 +669,7 @@
 
     <div class="container">
         <div class="container-glow"></div>
-        <h1>Currency</h1>
+        <h1><span id="titleText"></span><span class="title-cursor"></span></h1>
         <p class="subtitle">Realtime Exchange Network</p>
 
         <div class="currency-row">
@@ -759,6 +769,62 @@
     </div>
 
     <script>
+        // === TYPING TITLE ANIMATION ===
+        (function() {
+            const titles = [
+                '货币换算',
+                '貨幣換算',
+                '通貨換算',
+                'Currency'
+            ];
+            const el = document.getElementById('titleText');
+            let titleIdx = 0;
+            const TYPE_SPEED = 80;
+            const DELETE_SPEED = 50;
+            const PAUSE_AFTER_TYPE = 2000;
+            const PAUSE_AFTER_DELETE = 400;
+
+            function typeText(text, cb) {
+                let i = 0;
+                function next() {
+                    if (i <= text.length) {
+                        el.textContent = text.slice(0, i);
+                        i++;
+                        setTimeout(next, TYPE_SPEED);
+                    } else {
+                        setTimeout(cb, PAUSE_AFTER_TYPE);
+                    }
+                }
+                next();
+            }
+
+            function deleteText(cb) {
+                const text = el.textContent;
+                let i = text.length;
+                function next() {
+                    if (i >= 0) {
+                        el.textContent = text.slice(0, i);
+                        i--;
+                        setTimeout(next, DELETE_SPEED);
+                    } else {
+                        setTimeout(cb, PAUSE_AFTER_DELETE);
+                    }
+                }
+                next();
+            }
+
+            function loop() {
+                typeText(titles[titleIdx], () => {
+                    deleteText(() => {
+                        titleIdx = (titleIdx + 1) % titles.length;
+                        loop();
+                    });
+                });
+            }
+
+            loop();
+        })();
+
         // === PARTICLES ===
         (function() {
             const container = document.getElementById('particles');

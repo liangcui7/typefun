@@ -355,26 +355,42 @@
         }
 
         .currency-label .default-star {
-            position: absolute;
-            top: -7px;
-            right: -4px;
-            font-size: 0.4rem;
-            font-family: 'Google Sans', 'Product Sans', 'Inter', sans-serif;
-            font-weight: 500;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: rgba(255, 109, 0, 0.6);
             display: none;
+            font-size: 0.35rem;
+            font-family: 'Google Sans', 'Product Sans', 'Inter', sans-serif;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #ffd600;
+            padding: 1px 4px;
+            border-radius: 2px;
+            position: relative;
+            margin-top: 1px;
+            z-index: 1;
+        }
+
+        .currency-label .default-star::before {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: 3px;
+            padding: 1px;
+            background: linear-gradient(90deg, #ffd600, #ffab00, #ff6d00, #ffab00, #ffd600);
+            background-size: 200% 100%;
+            animation: border-shimmer 2s linear infinite;
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            z-index: -1;
+        }
+
+        @keyframes border-shimmer {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
         }
 
         .currency-label.is-default .default-star {
-            display: block;
-            animation: label-fade 3s ease-in-out infinite;
-        }
-
-        @keyframes label-fade {
-            0%, 100% { opacity: 0.45; }
-            50% { opacity: 0.8; }
+            display: inline-block;
         }
 
         .flag {
@@ -677,11 +693,11 @@
 
         <div class="currency-row">
             <div class="currency-label" data-currency-label>
-                <span class="default-star">Default</span>
                 <span class="flag">&#127481;&#127484;</span>
                 <div>
                     <div class="code">TWD</div>
                     <div class="currency-name">NT Dollar</div>
+                    <span class="default-star">Default</span>
                 </div>
             </div>
             <input type="text" inputmode="none" readonly class="currency-input" id="TWD" placeholder="0.00">
@@ -689,11 +705,11 @@
 
         <div class="currency-row">
             <div class="currency-label" data-currency-label>
-                <span class="default-star">Default</span>
                 <span class="flag">&#127482;&#127480;</span>
                 <div>
                     <div class="code">USD</div>
                     <div class="currency-name">US Dollar</div>
+                    <span class="default-star">Default</span>
                 </div>
             </div>
             <input type="text" inputmode="none" readonly class="currency-input" id="USD" placeholder="0.00">
@@ -701,11 +717,11 @@
 
         <div class="currency-row">
             <div class="currency-label" data-currency-label>
-                <span class="default-star">Default</span>
                 <span class="flag">&#127464;&#127462;</span>
                 <div>
                     <div class="code">CAD</div>
                     <div class="currency-name">Canadian Dollar</div>
+                    <span class="default-star">Default</span>
                 </div>
             </div>
             <input type="text" inputmode="none" readonly class="currency-input" id="CAD" placeholder="0.00">
@@ -713,11 +729,11 @@
 
         <div class="currency-row">
             <div class="currency-label" data-currency-label>
-                <span class="default-star">Default</span>
                 <span class="flag">&#127464;&#127475;</span>
                 <div>
                     <div class="code">CNY</div>
                     <div class="currency-name">Chinese Yuan</div>
+                    <span class="default-star">Default</span>
                 </div>
             </div>
             <input type="text" inputmode="none" readonly class="currency-input" id="CNY" placeholder="0.00">
@@ -725,11 +741,11 @@
 
         <div class="currency-row">
             <div class="currency-label" data-currency-label>
-                <span class="default-star">Default</span>
                 <span class="flag">&#127471;&#127477;</span>
                 <div>
                     <div class="code">JPY</div>
                     <div class="currency-name">Japanese Yen</div>
+                    <span class="default-star">Default</span>
                 </div>
             </div>
             <input type="text" inputmode="none" readonly class="currency-input" id="JPY" placeholder="0.00">
@@ -737,11 +753,11 @@
 
         <div class="currency-row">
             <div class="currency-label" data-currency-label>
-                <span class="default-star">Default</span>
                 <span class="flag">&#127480;&#127468;</span>
                 <div>
                     <div class="code">SGD</div>
                     <div class="currency-name">Singapore Dollar</div>
+                    <span class="default-star">Default</span>
                 </div>
             </div>
             <input type="text" inputmode="none" readonly class="currency-input" id="SGD" placeholder="0.00">

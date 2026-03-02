@@ -79,25 +79,27 @@
             z-index: 0;
         }
 
-        /* Horizontal scan line */
-        body::after {
-            content: '';
-            position: fixed;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--cyan-glow), var(--cyan), var(--cyan-glow), transparent);
-            opacity: 0.3;
-            z-index: 100;
-            animation: scanline 4s ease-in-out infinite;
+        /* Touch ripple overlay */
+        .touch-ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--cyan) 0%, transparent 70%);
             pointer-events: none;
+            transform: scale(0);
+            opacity: 0.5;
+            z-index: 10;
         }
 
-        @keyframes scanline {
-            0%, 100% { top: -2px; opacity: 0; }
-            10% { opacity: 0.3; }
-            90% { opacity: 0.3; }
-            100% { top: 100vh; opacity: 0; }
+        .touch-ripple.fire {
+            animation: ripple-expand 0.6s cubic-bezier(0, 0.5, 0.3, 1) forwards;
+        }
+
+        .touch-ripple.orange {
+            background: radial-gradient(circle, var(--orange) 0%, transparent 70%);
+        }
+
+        @keyframes ripple-expand {
+            to { transform: scale(1); opacity: 0; }
         }
 
         /* === FLOATING PARTICLES === */
@@ -244,21 +246,61 @@
             content: '';
             position: absolute;
             left: 0;
-            top: 50%;
-            transform: translateY(-50%);
+            top: 0;
+            bottom: 0;
             width: 2px;
-            height: 0;
-            background: var(--cyan);
-            transition: height 0.3s;
-            box-shadow: 0 0 8px var(--cyan-glow);
+            background: linear-gradient(180deg, transparent, var(--cyan), transparent);
+            transform: scaleY(0);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 0 12px var(--cyan), 0 0 24px var(--cyan-glow);
         }
 
         .currency-row:has(.currency-input:focus)::before {
-            height: 70%;
+            transform: scaleY(1);
         }
 
         .currency-row:has(.currency-input:focus) {
-            background: rgba(0, 229, 255, 0.03);
+            background: rgba(0, 229, 255, 0.04);
+        }
+
+        /* Sweep highlight on row select */
+        .currency-row::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, var(--cyan-glow), transparent 40%);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s;
+        }
+
+        .currency-row.sweep::after {
+            animation: row-sweep 0.5s ease-out forwards;
+        }
+
+        @keyframes row-sweep {
+            0% { opacity: 0.3; transform: translateX(-100%); }
+            100% { opacity: 0; transform: translateX(100%); }
+        }
+
+        /* Value flash on update */
+        .currency-input.value-flash {
+            animation: val-flash 0.35s ease-out;
+        }
+
+        @keyframes val-flash {
+            0% { color: var(--cyan); text-shadow: 0 0 12px var(--cyan-glow); }
+            100% { color: #fff; text-shadow: none; }
+        }
+
+        /* Active input glow pulse */
+        .currency-input.active-glow {
+            animation: input-breathe 2s ease-in-out infinite;
+        }
+
+        @keyframes input-breathe {
+            0%, 100% { box-shadow: 0 0 8px rgba(0,229,255,0.08), inset 0 0 15px rgba(0,229,255,0.02); }
+            50% { box-shadow: 0 0 16px rgba(0,229,255,0.15), inset 0 0 25px rgba(0,229,255,0.04); }
         }
 
         .currency-label {
@@ -449,7 +491,7 @@
             font-weight: 400;
             padding: 12px 0;
             cursor: pointer;
-            transition: all 0.15s;
+            transition: all 0.12s cubic-bezier(0.16, 1, 0.3, 1);
             user-select: none;
             -webkit-user-select: none;
             -webkit-tap-highlight-color: transparent;
@@ -457,25 +499,48 @@
             overflow: hidden;
         }
 
-        /* Ripple flash on press */
-        .numpad-btn::after {
-            content: '';
+        .numpad-btn.btn-pop {
+            animation: btn-pop 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes btn-pop {
+            0% { transform: scale(1); }
+            30% { transform: scale(0.88); background: rgba(0, 229, 255, 0.2); border-color: var(--cyan); box-shadow: 0 0 20px var(--cyan-glow); }
+            60% { transform: scale(1.04); }
+            100% { transform: scale(1); }
+        }
+
+        .numpad-btn.btn-pop-orange {
+            animation: btn-pop-orange 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes btn-pop-orange {
+            0% { transform: scale(1); }
+            30% { transform: scale(0.88); background: rgba(255, 109, 0, 0.25); border-color: var(--orange); box-shadow: 0 0 20px var(--orange-glow); }
+            60% { transform: scale(1.04); }
+            100% { transform: scale(1); }
+        }
+
+        /* Shockwave ring on press */
+        .numpad-shockwave {
             position: absolute;
-            inset: 0;
-            background: radial-gradient(circle at center, var(--cyan-glow), transparent 70%);
-            opacity: 0;
-            transition: opacity 0.15s;
+            border-radius: 50%;
+            border: 1px solid var(--cyan);
+            pointer-events: none;
+            transform: scale(0);
+            opacity: 0.6;
         }
 
-        .numpad-btn:active::after {
-            opacity: 1;
+        .numpad-shockwave.fire {
+            animation: shockwave 0.5s ease-out forwards;
         }
 
-        .numpad-btn:active {
-            background: rgba(0, 229, 255, 0.12);
-            border-color: var(--cyan);
-            transform: scale(0.96);
-            box-shadow: 0 0 12px var(--cyan-glow);
+        .numpad-shockwave.orange {
+            border-color: var(--orange);
+        }
+
+        @keyframes shockwave {
+            to { transform: scale(3); opacity: 0; }
         }
 
         .numpad-btn.clear-btn {
@@ -485,20 +550,8 @@
             letter-spacing: 0.15em;
         }
 
-        .numpad-btn.clear-btn:active {
-            background: rgba(255, 109, 0, 0.12);
-            border-color: var(--orange);
-            box-shadow: 0 0 12px var(--orange-glow);
-        }
-
         .numpad-btn.backspace-btn {
             color: var(--orange);
-        }
-
-        .numpad-btn.backspace-btn:active {
-            background: rgba(255, 109, 0, 0.12);
-            border-color: var(--orange);
-            box-shadow: 0 0 12px var(--orange-glow);
         }
 
         /* === DECORATIVE ELEMENTS === */
@@ -668,6 +721,41 @@
             }, 1000);
         })();
 
+        // === INTERACTION EFFECTS ===
+        function createRipple(container, x, y, size, isOrange) {
+            const ripple = document.createElement('div');
+            ripple.className = 'touch-ripple' + (isOrange ? ' orange' : '');
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = (x - size / 2) + 'px';
+            ripple.style.top = (y - size / 2) + 'px';
+            container.appendChild(ripple);
+            requestAnimationFrame(() => ripple.classList.add('fire'));
+            setTimeout(() => ripple.remove(), 600);
+        }
+
+        function createShockwave(container, x, y, isOrange) {
+            const ring = document.createElement('div');
+            ring.className = 'numpad-shockwave' + (isOrange ? ' orange' : '');
+            ring.style.width = ring.style.height = '40px';
+            ring.style.left = (x - 20) + 'px';
+            ring.style.top = (y - 20) + 'px';
+            container.appendChild(ring);
+            requestAnimationFrame(() => ring.classList.add('fire'));
+            setTimeout(() => ring.remove(), 500);
+        }
+
+        function flashValue(input) {
+            input.classList.remove('value-flash');
+            void input.offsetWidth;
+            input.classList.add('value-flash');
+        }
+
+        function sweepRow(row) {
+            row.classList.remove('sweep');
+            void row.offsetWidth;
+            row.classList.add('sweep');
+        }
+
         // === CORE LOGIC ===
         const currencies = ['TWD', 'USD', 'CAD', 'CNY', 'JPY', 'SGD'];
         const DEFAULT_CURRENCY_KEY = 'defaultCurrency';
@@ -769,11 +857,16 @@
 
             const valueInUSD = value / rates[sourceCurrency];
 
-            currencies.forEach(c => {
+            currencies.forEach((c, i) => {
                 if (c !== sourceCurrency) {
+                    const el = document.getElementById(c);
                     const converted = valueInUSD * rates[c];
                     const decimals = (c === 'JPY' || c === 'TWD') ? 0 : 2;
-                    document.getElementById(c).value = addCommas(converted.toFixed(decimals));
+                    const newVal = addCommas(converted.toFixed(decimals));
+                    if (el.value !== newVal) {
+                        el.value = newVal;
+                        setTimeout(() => flashValue(el), i * 40);
+                    }
                 }
             });
         }
@@ -790,6 +883,11 @@
 
             input.addEventListener('focus', () => {
                 activeField = currency;
+                // Remove breathing glow from all, add to focused
+                document.querySelectorAll('.currency-input').forEach(el => el.classList.remove('active-glow'));
+                input.classList.add('active-glow');
+                // Sweep effect on row
+                sweepRow(input.closest('.currency-row'));
             });
 
             label.addEventListener('click', () => {
@@ -803,7 +901,7 @@
         activeField = defaultCurrency;
         document.getElementById(defaultCurrency).focus();
 
-        // Numpad logic
+        // Numpad logic with interaction effects
         document.querySelectorAll('.numpad-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -811,6 +909,19 @@
                 const input = document.getElementById(activeField);
                 const raw = input.value.replace(/,/g, '');
                 const key = btn.dataset.key;
+                const isOrange = key === 'C' || key === 'del';
+
+                // Button bounce animation
+                btn.classList.remove('btn-pop', 'btn-pop-orange');
+                void btn.offsetWidth;
+                btn.classList.add(isOrange ? 'btn-pop-orange' : 'btn-pop');
+
+                // Ripple from touch point
+                const rect = btn.getBoundingClientRect();
+                const x = e.clientX ? e.clientX - rect.left : rect.width / 2;
+                const y = e.clientY ? e.clientY - rect.top : rect.height / 2;
+                createRipple(btn, x, y, 120, isOrange);
+                createShockwave(btn, x, y, isOrange);
 
                 if (key === 'C') {
                     input.value = '';
@@ -827,6 +938,9 @@
                     input.value = addCommas(raw + key);
                     convert(activeField);
                 }
+
+                // Flash the active input
+                flashValue(input);
             });
         });
 

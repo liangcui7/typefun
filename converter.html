@@ -3,7 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0f2027">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Currency">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23203a43'/%3E%3Cstop offset='100%25' stop-color='%232c5364'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='512' height='512' rx='96' fill='url(%23bg)'/%3E%3Ccircle cx='200' cy='220' r='90' fill='none' stroke='%234fc3f7' stroke-width='24'/%3E%3Ctext x='200' y='245' text-anchor='middle' font-family='sans-serif' font-weight='700' font-size='96' fill='%234fc3f7'%3E%24%3C/text%3E%3Ccircle cx='312' cy='292' r='90' fill='none' stroke='%2381d4fa' stroke-width='24'/%3E%3Ctext x='312' y='318' text-anchor='middle' font-family='sans-serif' font-weight='700' font-size='80' fill='%2381d4fa'%3E%C2%A5%3C/text%3E%3C/svg%3E">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23203a43'/%3E%3Cstop offset='100%25' stop-color='%232c5364'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='512' height='512' rx='96' fill='url(%23bg)'/%3E%3Ccircle cx='200' cy='220' r='90' fill='none' stroke='%234fc3f7' stroke-width='24'/%3E%3Ctext x='200' y='245' text-anchor='middle' font-family='sans-serif' font-weight='700' font-size='96' fill='%234fc3f7'%3E%24%3C/text%3E%3Ccircle cx='312' cy='292' r='90' fill='none' stroke='%2381d4fa' stroke-width='24'/%3E%3Ctext x='312' y='318' text-anchor='middle' font-family='sans-serif' font-weight='700' font-size='80' fill='%2381d4fa'%3E%C2%A5%3C/text%3E%3C/svg%3E">
     <title>Currency Converter</title>
+    <script>
+        // Inline web app manifest for Android home screen
+        const manifest = {
+            name: "Currency Converter",
+            short_name: "Currency",
+            start_url: "converter.html",
+            display: "standalone",
+            background_color: "#0f2027",
+            theme_color: "#0f2027",
+            icons: [{
+                src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23203a43'/%3E%3Cstop offset='100%25' stop-color='%232c5364'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='512' height='512' rx='96' fill='url(%23bg)'/%3E%3Ccircle cx='200' cy='220' r='90' fill='none' stroke='%234fc3f7' stroke-width='24'/%3E%3Ctext x='200' y='245' text-anchor='middle' font-family='sans-serif' font-weight='700' font-size='96' fill='%234fc3f7'%3E%24%3C/text%3E%3Ccircle cx='312' cy='292' r='90' fill='none' stroke='%2381d4fa' stroke-width='24'/%3E%3Ctext x='312' y='318' text-anchor='middle' font-family='sans-serif' font-weight='700' font-size='80' fill='%2381d4fa'%3E%C2%A5%3C/text%3E%3C/svg%3E",
+                sizes: "512x512",
+                type: "image/svg+xml",
+                purpose: "any maskable"
+            }]
+        };
+        const blob = new Blob([JSON.stringify(manifest)], {type: 'application/json'});
+        const link = document.createElement('link');
+        link.rel = 'manifest';
+        link.href = URL.createObjectURL(blob);
+        document.head.appendChild(link);
+    </script>
     <style>
         * {
             margin: 0;

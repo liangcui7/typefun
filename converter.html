@@ -1732,7 +1732,9 @@
                 input.classList.add('key-pulse');
                 input.addEventListener('animationend', () => {
                     input.classList.remove('key-pulse');
-                    input.classList.add('active-glow');
+                    if (activeField === currency) {
+                        input.classList.add('active-glow');
+                    }
                 }, { once: true });
 
                 // Restore focus to active input (touch devices)

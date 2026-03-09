@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>台灣注音學習 - Learn Taiwanese Zhuyin (Bopomofo)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans TC', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .app-container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 30px 0 20px;
+            color: white;
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 8px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        header p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 10px 22px;
+            border: none;
+            border-radius: 25px;
+            background: rgba(255,255,255,0.25);
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .tab-btn:hover {
+            background: rgba(255,255,255,0.4);
+        }
+
+        .tab-btn.active {
+            background: white;
+            color: #764ba2;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            margin-bottom: 20px;
+        }
+
+        /* Chart View */
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+            gap: 10px;
+        }
+
+        .chart-cell {
+            background: #f8f5ff;
+            border: 2px solid #e8e0f5;
+            border-radius: 12px;
+            padding: 12px 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .chart-cell:hover {
+            background: #ede5ff;
+            border-color: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(118, 75, 162, 0.2);
+        }
+
+        .chart-cell.playing {
+            background: #764ba2;
+            border-color: #764ba2;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .chart-cell .zhuyin {
+            font-size: 1.8rem;
+            font-weight: bold;
+            display: block;
+            line-height: 1.3;
+        }
+
+        .chart-cell .romanization {
+            font-size: 0.7rem;
+            color: #888;
+            margin-top: 4px;
+            display: block;
+        }
+
+        .chart-cell.playing .romanization {
+            color: rgba(255,255,255,0.8);
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            color: #764ba2;
+            margin: 20px 0 12px;
+            padding-bottom: 6px;
+            border-bottom: 2px solid #ede5ff;
+        }
+
+        .section-title:first-child {
+            margin-top: 0;
+        }
+
+        /* Quiz View */
+        .quiz-area {
+            text-align: center;
+        }
+
+        .quiz-symbol {
+            font-size: 6rem;
+            font-weight: bold;
+            color: #764ba2;
+            margin: 20px 0;
+            line-height: 1.2;
+        }
+
+        .quiz-prompt {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        .quiz-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            max-width: 500px;
+            margin: 0 auto 20px;
+        }
+
+        .quiz-option {
+            padding: 16px;
+            border: 2px solid #e8e0f5;
+            border-radius: 14px;
+            background: #faf8ff;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quiz-option:hover {
+            border-color: #764ba2;
+            background: #f0e8ff;
+        }
+
+        .quiz-option.correct {
+            border-color: #4caf50;
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .quiz-option.wrong {
+            border-color: #f44336;
+            background: #fce4ec;
+            color: #c62828;
+        }
+
+        .quiz-option:disabled {
+            cursor: default;
+        }
+
+        .quiz-score {
+            font-size: 1rem;
+            color: #888;
+            margin-top: 10px;
+        }
+
+        .quiz-controls {
+            margin-top: 15px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(118, 75, 162, 0.4);
+        }
+
+        .quiz-mode-select {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .quiz-mode-btn {
+            padding: 8px 18px;
+            border: 2px solid #e8e0f5;
+            border-radius: 20px;
+            background: white;
+            color: #764ba2;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quiz-mode-btn.active {
+            background: #764ba2;
+            color: white;
+            border-color: #764ba2;
+        }
+
+        /* Practice View */
+        .practice-area {
+            text-align: center;
+        }
+
+        .practice-symbol {
+            font-size: 5rem;
+            font-weight: bold;
+            color: #764ba2;
+            margin: 10px 0;
+        }
+
+        .practice-info {
+            font-size: 1.2rem;
+            color: #555;
+            margin-bottom: 5px;
+        }
+
+        .practice-example {
+            font-size: 1rem;
+            color: #888;
+            margin-bottom: 20px;
+        }
+
+        .practice-nav {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .nav-btn {
+            width: 48px;
+            height: 48px;
+            border: none;
+            border-radius: 50%;
+            background: #764ba2;
+            color: white;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-btn:hover {
+            transform: scale(1.1);
+            background: #5a3580;
+        }
+
+        .play-btn {
+            width: 64px;
+            height: 64px;
+            font-size: 1.6rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .practice-counter {
+            font-size: 0.9rem;
+            color: #aaa;
+            margin-top: 15px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .feedback {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin: 10px 0;
+            min-height: 2em;
+        }
+
+        .feedback.correct {
+            color: #4caf50;
+        }
+
+        .feedback.wrong {
+            color: #f44336;
+        }
+
+        @media (max-width: 600px) {
+            .chart-grid {
+                grid-template-columns: repeat(auto-fill, minmax(58px, 1fr));
+                gap: 6px;
+            }
+            .chart-cell .zhuyin {
+                font-size: 1.5rem;
+            }
+            header h1 {
+                font-size: 1.6rem;
+            }
+            .card {
+                padding: 20px;
+            }
+            .quiz-symbol {
+                font-size: 4.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <h1>台灣注音學習</h1>
+            <p>Learn Taiwanese Zhuyin (Bopomofo)</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="chart">注音表 Chart</button>
+            <button class="tab-btn" data-tab="practice">練習 Practice</button>
+            <button class="tab-btn" data-tab="quiz">測驗 Quiz</button>
+        </div>
+
+        <!-- Chart Tab -->
+        <div id="tab-chart" class="tab-content active">
+            <div class="card">
+                <div class="section-title">聲母 Consonants (Initials)</div>
+                <div class="chart-grid" id="consonants-grid"></div>
+
+                <div class="section-title">韻母 Vowels (Finals)</div>
+                <div class="chart-grid" id="vowels-grid"></div>
+
+                <div class="section-title">聲調 Tones</div>
+                <div class="chart-grid" id="tones-grid"></div>
+            </div>
+        </div>
+
+        <!-- Practice Tab -->
+        <div id="tab-practice" class="tab-content">
+            <div class="card practice-area">
+                <div class="practice-symbol" id="practice-symbol"></div>
+                <div class="practice-info" id="practice-info"></div>
+                <div class="practice-example" id="practice-example"></div>
+                <div class="practice-nav">
+                    <button class="nav-btn" id="prev-btn" title="Previous">&#9664;</button>
+                    <button class="nav-btn play-btn" id="play-btn" title="Play sound">&#9654;</button>
+                    <button class="nav-btn" id="next-btn" title="Next">&#9654;</button>
+                </div>
+                <div class="practice-counter" id="practice-counter"></div>
+            </div>
+        </div>
+
+        <!-- Quiz Tab -->
+        <div id="tab-quiz" class="tab-content">
+            <div class="card quiz-area">
+                <div class="quiz-mode-select">
+                    <button class="quiz-mode-btn active" data-mode="symbol-to-sound">Symbol → Sound</button>
+                    <button class="quiz-mode-btn" data-mode="sound-to-symbol">Sound → Symbol</button>
+                </div>
+                <div class="quiz-symbol" id="quiz-symbol"></div>
+                <div class="quiz-prompt" id="quiz-prompt"></div>
+                <div class="quiz-options" id="quiz-options"></div>
+                <div class="feedback" id="quiz-feedback"></div>
+                <div class="quiz-controls">
+                    <button class="btn" id="next-quiz-btn">Next Question</button>
+                </div>
+                <div class="quiz-score" id="quiz-score">Score: 0 / 0</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Zhuyin data
+        const consonants = [
+            { symbol: 'ㄅ', pinyin: 'b', example: '八 bā (eight)' },
+            { symbol: 'ㄆ', pinyin: 'p', example: '怕 pà (afraid)' },
+            { symbol: 'ㄇ', pinyin: 'm', example: '媽 mā (mom)' },
+            { symbol: 'ㄈ', pinyin: 'f', example: '飛 fēi (fly)' },
+            { symbol: 'ㄉ', pinyin: 'd', example: '大 dà (big)' },
+            { symbol: 'ㄊ', pinyin: 't', example: '他 tā (he)' },
+            { symbol: 'ㄋ', pinyin: 'n', example: '你 nǐ (you)' },
+            { symbol: 'ㄌ', pinyin: 'l', example: '來 lái (come)' },
+            { symbol: 'ㄍ', pinyin: 'g', example: '哥 gē (brother)' },
+            { symbol: 'ㄎ', pinyin: 'k', example: '可 kě (can)' },
+            { symbol: 'ㄏ', pinyin: 'h', example: '好 hǎo (good)' },
+            { symbol: 'ㄐ', pinyin: 'j', example: '家 jiā (home)' },
+            { symbol: 'ㄑ', pinyin: 'q', example: '去 qù (go)' },
+            { symbol: 'ㄒ', pinyin: 'x', example: '小 xiǎo (small)' },
+            { symbol: 'ㄓ', pinyin: 'zh', example: '中 zhōng (middle)' },
+            { symbol: 'ㄔ', pinyin: 'ch', example: '吃 chī (eat)' },
+            { symbol: 'ㄕ', pinyin: 'sh', example: '是 shì (is)' },
+            { symbol: 'ㄖ', pinyin: 'r', example: '人 rén (person)' },
+            { symbol: 'ㄗ', pinyin: 'z', example: '做 zuò (do)' },
+            { symbol: 'ㄘ', pinyin: 'c', example: '次 cì (time)' },
+            { symbol: 'ㄙ', pinyin: 's', example: '三 sān (three)' },
+        ];
+
+        const vowels = [
+            { symbol: 'ㄚ', pinyin: 'a', example: '啊 a (ah)' },
+            { symbol: 'ㄛ', pinyin: 'o', example: '哦 ó (oh)' },
+            { symbol: 'ㄜ', pinyin: 'e', example: '餓 è (hungry)' },
+            { symbol: 'ㄝ', pinyin: 'ê', example: '耶 yē (yeah)' },
+            { symbol: 'ㄞ', pinyin: 'ai', example: '愛 ài (love)' },
+            { symbol: 'ㄟ', pinyin: 'ei', example: '杯 bēi (cup)' },
+            { symbol: 'ㄠ', pinyin: 'ao', example: '好 hǎo (good)' },
+            { symbol: 'ㄡ', pinyin: 'ou', example: '走 zǒu (walk)' },
+            { symbol: 'ㄢ', pinyin: 'an', example: '安 ān (peace)' },
+            { symbol: 'ㄣ', pinyin: 'en', example: '人 rén (person)' },
+            { symbol: 'ㄤ', pinyin: 'ang', example: '忙 máng (busy)' },
+            { symbol: 'ㄥ', pinyin: 'eng', example: '風 fēng (wind)' },
+            { symbol: 'ㄦ', pinyin: 'er', example: '二 èr (two)' },
+            { symbol: 'ㄧ', pinyin: 'i', example: '一 yī (one)' },
+            { symbol: 'ㄨ', pinyin: 'u', example: '五 wǔ (five)' },
+            { symbol: 'ㄩ', pinyin: 'ü', example: '雨 yǔ (rain)' },
+        ];
+
+        const tones = [
+            { symbol: 'ˉ', pinyin: '1st (high level)', example: '媽 mā' },
+            { symbol: 'ˊ', pinyin: '2nd (rising)', example: '麻 má' },
+            { symbol: 'ˇ', pinyin: '3rd (dipping)', example: '馬 mǎ' },
+            { symbol: 'ˋ', pinyin: '4th (falling)', example: '罵 mà' },
+            { symbol: '˙', pinyin: 'neutral (light)', example: '嗎 ma' },
+        ];
+
+        const allSymbols = [...consonants, ...vowels];
+
+        // State
+        let practiceIndex = 0;
+        let quizScore = 0;
+        let quizTotal = 0;
+        let quizMode = 'symbol-to-sound';
+        let quizAnswered = false;
+
+        // Speech synthesis
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'zh-TW';
+                utterance.rate = 0.7;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        // Build chart
+        function buildGrid(containerId, data) {
+            const grid = document.getElementById(containerId);
+            data.forEach((item, i) => {
+                const cell = document.createElement('div');
+                cell.className = 'chart-cell';
+                cell.innerHTML = `<span class="zhuyin">${item.symbol}</span><span class="romanization">${item.pinyin}</span>`;
+                cell.addEventListener('click', () => {
+                    cell.classList.add('playing');
+                    speak(item.symbol);
+                    setTimeout(() => cell.classList.remove('playing'), 600);
+                });
+                grid.appendChild(cell);
+            });
+        }
+
+        buildGrid('consonants-grid', consonants);
+        buildGrid('vowels-grid', vowels);
+        buildGrid('tones-grid', tones);
+
+        // Tabs
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                btn.classList.add('active');
+                document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+
+                if (btn.dataset.tab === 'practice') updatePractice();
+                if (btn.dataset.tab === 'quiz') newQuizQuestion();
+            });
+        });
+
+        // Practice
+        function updatePractice() {
+            const item = allSymbols[practiceIndex];
+            document.getElementById('practice-symbol').textContent = item.symbol;
+            document.getElementById('practice-info').textContent = `Pronunciation: ${item.pinyin}`;
+            document.getElementById('practice-example').textContent = `Example: ${item.example}`;
+            document.getElementById('practice-counter').textContent = `${practiceIndex + 1} / ${allSymbols.length}`;
+        }
+
+        document.getElementById('prev-btn').addEventListener('click', () => {
+            practiceIndex = (practiceIndex - 1 + allSymbols.length) % allSymbols.length;
+            updatePractice();
+        });
+
+        document.getElementById('next-btn').addEventListener('click', () => {
+            practiceIndex = (practiceIndex + 1) % allSymbols.length;
+            updatePractice();
+        });
+
+        document.getElementById('play-btn').addEventListener('click', () => {
+            speak(allSymbols[practiceIndex].symbol);
+        });
+
+        updatePractice();
+
+        // Quiz mode buttons
+        document.querySelectorAll('.quiz-mode-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.quiz-mode-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                quizMode = btn.dataset.mode;
+                quizScore = 0;
+                quizTotal = 0;
+                updateScoreDisplay();
+                newQuizQuestion();
+            });
+        });
+
+        // Quiz
+        function shuffle(arr) {
+            const a = [...arr];
+            for (let i = a.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+            return a;
+        }
+
+        function newQuizQuestion() {
+            quizAnswered = false;
+            document.getElementById('quiz-feedback').textContent = '';
+            document.getElementById('quiz-feedback').className = 'feedback';
+
+            const correctItem = allSymbols[Math.floor(Math.random() * allSymbols.length)];
+
+            // Pick 3 wrong answers
+            let wrongOptions = allSymbols.filter(s => s.symbol !== correctItem.symbol);
+            wrongOptions = shuffle(wrongOptions).slice(0, 3);
+            const options = shuffle([correctItem, ...wrongOptions]);
+
+            if (quizMode === 'symbol-to-sound') {
+                document.getElementById('quiz-symbol').textContent = correctItem.symbol;
+                document.getElementById('quiz-prompt').textContent = 'What is the pronunciation of this symbol?';
+                renderOptions(options, correctItem, 'pinyin');
+            } else {
+                document.getElementById('quiz-symbol').textContent = correctItem.pinyin;
+                document.getElementById('quiz-prompt').textContent = 'Which symbol matches this sound?';
+                renderOptions(options, correctItem, 'symbol');
+            }
+        }
+
+        function renderOptions(options, correctItem, displayKey) {
+            const container = document.getElementById('quiz-options');
+            container.innerHTML = '';
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'quiz-option';
+                btn.textContent = opt[displayKey];
+                btn.addEventListener('click', () => {
+                    if (quizAnswered) return;
+                    quizAnswered = true;
+                    quizTotal++;
+
+                    const isCorrect = opt.symbol === correctItem.symbol;
+                    if (isCorrect) {
+                        quizScore++;
+                        btn.classList.add('correct');
+                        document.getElementById('quiz-feedback').textContent = 'Correct!';
+                        document.getElementById('quiz-feedback').className = 'feedback correct';
+                    } else {
+                        btn.classList.add('wrong');
+                        document.getElementById('quiz-feedback').textContent = `Wrong! The answer is ${correctItem[displayKey]}`;
+                        document.getElementById('quiz-feedback').className = 'feedback wrong';
+                        // Highlight correct
+                        container.querySelectorAll('.quiz-option').forEach(b => {
+                            if (b.textContent === correctItem[displayKey]) b.classList.add('correct');
+                        });
+                    }
+
+                    speak(correctItem.symbol);
+                    updateScoreDisplay();
+
+                    container.querySelectorAll('.quiz-option').forEach(b => b.disabled = true);
+                });
+                container.appendChild(btn);
+            });
+        }
+
+        function updateScoreDisplay() {
+            document.getElementById('quiz-score').textContent = `Score: ${quizScore} / ${quizTotal}`;
+        }
+
+        document.getElementById('next-quiz-btn').addEventListener('click', newQuizQuestion);
+        newQuizQuestion();
+
+        // Keyboard navigation for practice
+        document.addEventListener('keydown', (e) => {
+            const practiceTab = document.getElementById('tab-practice');
+            if (!practiceTab.classList.contains('active')) return;
+
+            if (e.key === 'ArrowLeft') {
+                practiceIndex = (practiceIndex - 1 + allSymbols.length) % allSymbols.length;
+                updatePractice();
+            } else if (e.key === 'ArrowRight') {
+                practiceIndex = (practiceIndex + 1) % allSymbols.length;
+                updatePractice();
+            } else if (e.key === ' ' || e.key === 'Enter') {
+                e.preventDefault();
+                speak(allSymbols[practiceIndex].symbol);
+            }
+        });
+    </script>
+</body>
+</html>

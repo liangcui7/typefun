@@ -1,0 +1,24 @@
+{
+  "name": "台灣注音學習 - Zhuyin Learning",
+  "short_name": "注音學習",
+  "description": "Learn Taiwanese Zhuyin (Bopomofo) with interactive charts, practice, and quizzes",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#764ba2",
+  "theme_color": "#764ba2",
+  "icons": [
+    {
+      "src": "icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -104,6 +104,7 @@
             cursor: pointer;
             transition: all 0.2s;
             user-select: none;
+            position: relative;
         }
 
         .chart-cell:hover {
@@ -111,6 +112,46 @@
             border-color: #764ba2;
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(118, 75, 162, 0.2);
+        }
+
+        .chart-cell .origin-tooltip {
+            display: none;
+            position: absolute;
+            bottom: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            line-height: 1.5;
+            white-space: nowrap;
+            z-index: 100;
+            pointer-events: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .chart-cell .origin-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: #333;
+        }
+
+        .chart-cell .origin-tooltip .origin-char {
+            font-size: 1.4rem;
+            font-weight: bold;
+            display: block;
+            text-align: center;
+            margin-bottom: 2px;
+        }
+
+        .chart-cell:hover .origin-tooltip {
+            display: block;
         }
 
         .chart-cell.playing {
@@ -608,46 +649,46 @@
     <script>
         // Zhuyin data
         const consonants = [
-            { symbol: 'ㄅ', pinyin: 'b', example: '八 bā (eight)' },
-            { symbol: 'ㄆ', pinyin: 'p', example: '怕 pà (afraid)' },
-            { symbol: 'ㄇ', pinyin: 'm', example: '媽 mā (mom)' },
-            { symbol: 'ㄈ', pinyin: 'f', example: '飛 fēi (fly)' },
-            { symbol: 'ㄉ', pinyin: 'd', example: '大 dà (big)' },
-            { symbol: 'ㄊ', pinyin: 't', example: '他 tā (he)' },
-            { symbol: 'ㄋ', pinyin: 'n', example: '你 nǐ (you)' },
-            { symbol: 'ㄌ', pinyin: 'l', example: '來 lái (come)' },
-            { symbol: 'ㄍ', pinyin: 'g', example: '哥 gē (brother)' },
-            { symbol: 'ㄎ', pinyin: 'k', example: '可 kě (can)' },
-            { symbol: 'ㄏ', pinyin: 'h', example: '好 hǎo (good)' },
-            { symbol: 'ㄐ', pinyin: 'j', example: '家 jiā (home)' },
-            { symbol: 'ㄑ', pinyin: 'q', example: '去 qù (go)' },
-            { symbol: 'ㄒ', pinyin: 'x', example: '小 xiǎo (small)' },
-            { symbol: 'ㄓ', pinyin: 'zh', example: '中 zhōng (middle)' },
-            { symbol: 'ㄔ', pinyin: 'ch', example: '吃 chī (eat)' },
-            { symbol: 'ㄕ', pinyin: 'sh', example: '是 shì (is)' },
-            { symbol: 'ㄖ', pinyin: 'r', example: '人 rén (person)' },
-            { symbol: 'ㄗ', pinyin: 'z', example: '做 zuò (do)' },
-            { symbol: 'ㄘ', pinyin: 'c', example: '次 cì (time)' },
-            { symbol: 'ㄙ', pinyin: 's', example: '三 sān (three)' },
+            { symbol: 'ㄅ', pinyin: 'b', example: '八 bā (eight)', origin: '勹', originFrom: '包 bāo', originDesc: 'From 勹, part of 包 (wrap)' },
+            { symbol: 'ㄆ', pinyin: 'p', example: '怕 pà (afraid)', origin: '攵', originFrom: '攵 pū', originDesc: 'From 攵 (to tap/strike)' },
+            { symbol: 'ㄇ', pinyin: 'm', example: '媽 mā (mom)', origin: '冂', originFrom: '冪 mì', originDesc: 'From 冂, part of 冪 (cover)' },
+            { symbol: 'ㄈ', pinyin: 'f', example: '飛 fēi (fly)', origin: '匚', originFrom: '匪 fěi', originDesc: 'From 匚, part of 匪 (basket)' },
+            { symbol: 'ㄉ', pinyin: 'd', example: '大 dà (big)', origin: '刀', originFrom: '刀 dāo', originDesc: 'Ancient form of 刀 (knife)' },
+            { symbol: 'ㄊ', pinyin: 't', example: '他 tā (he)', origin: '凸', originFrom: '突 tū', originDesc: 'From 凸/突 (to protrude)' },
+            { symbol: 'ㄋ', pinyin: 'n', example: '你 nǐ (you)', origin: '乃', originFrom: '乃 nǎi', originDesc: 'Ancient form of 乃 (thus)' },
+            { symbol: 'ㄌ', pinyin: 'l', example: '來 lái (come)', origin: '力', originFrom: '力 lì', originDesc: 'Ancient form of 力 (strength)' },
+            { symbol: 'ㄍ', pinyin: 'g', example: '哥 gē (brother)', origin: '巜', originFrom: '巜 guì', originDesc: 'From 巜 (stream), sound of 工' },
+            { symbol: 'ㄎ', pinyin: 'k', example: '可 kě (can)', origin: '丂', originFrom: '考 kǎo', originDesc: 'From 丂 (breath obstructed)' },
+            { symbol: 'ㄏ', pinyin: 'h', example: '好 hǎo (good)', origin: '厂', originFrom: '罕 hǎn', originDesc: 'From 厂 (cliff shelter)' },
+            { symbol: 'ㄐ', pinyin: 'j', example: '家 jiā (home)', origin: '丩', originFrom: '糾 jiū', originDesc: 'From 丩, part of 糾 (entangle)' },
+            { symbol: 'ㄑ', pinyin: 'q', example: '去 qù (go)', origin: '畎', originFrom: '犬 quǎn', originDesc: 'From 畎 (field ditch)' },
+            { symbol: 'ㄒ', pinyin: 'x', example: '小 xiǎo (small)', origin: '下', originFrom: '下 xià', originDesc: 'Ancient form of 下 (below)' },
+            { symbol: 'ㄓ', pinyin: 'zh', example: '中 zhōng (middle)', origin: '之', originFrom: '之 zhī', originDesc: 'Ancient form of 之 (of/go)' },
+            { symbol: 'ㄔ', pinyin: 'ch', example: '吃 chī (eat)', origin: '彳', originFrom: '彳 chì', originDesc: 'From 彳 (left step)' },
+            { symbol: 'ㄕ', pinyin: 'sh', example: '是 shì (is)', origin: '尸', originFrom: '尸 shī', originDesc: 'Ancient form of 尸 (body)' },
+            { symbol: 'ㄖ', pinyin: 'r', example: '人 rén (person)', origin: '日', originFrom: '日 rì', originDesc: 'Ancient form of 日 (sun)' },
+            { symbol: 'ㄗ', pinyin: 'z', example: '做 zuò (do)', origin: '節', originFrom: '節 jié', originDesc: 'From 卩, part of 節 (joint)' },
+            { symbol: 'ㄘ', pinyin: 'c', example: '次 cì (time)', origin: '七', originFrom: '七 qī', originDesc: 'Ancient form of 七 (seven)' },
+            { symbol: 'ㄙ', pinyin: 's', example: '三 sān (three)', origin: '私', originFrom: '私 sī', originDesc: 'From 厶, part of 私 (private)' },
         ];
 
         const vowels = [
-            { symbol: 'ㄚ', pinyin: 'a', example: '啊 a (ah)' },
-            { symbol: 'ㄛ', pinyin: 'o', example: '哦 ó (oh)' },
-            { symbol: 'ㄜ', pinyin: 'e', example: '餓 è (hungry)' },
-            { symbol: 'ㄝ', pinyin: 'ê', example: '耶 yē (yeah)' },
-            { symbol: 'ㄞ', pinyin: 'ai', example: '愛 ài (love)' },
-            { symbol: 'ㄟ', pinyin: 'ei', example: '杯 bēi (cup)' },
-            { symbol: 'ㄠ', pinyin: 'ao', example: '好 hǎo (good)' },
-            { symbol: 'ㄡ', pinyin: 'ou', example: '走 zǒu (walk)' },
-            { symbol: 'ㄢ', pinyin: 'an', example: '安 ān (peace)' },
-            { symbol: 'ㄣ', pinyin: 'en', example: '人 rén (person)' },
-            { symbol: 'ㄤ', pinyin: 'ang', example: '忙 máng (busy)' },
-            { symbol: 'ㄥ', pinyin: 'eng', example: '風 fēng (wind)' },
-            { symbol: 'ㄦ', pinyin: 'er', example: '二 èr (two)' },
-            { symbol: 'ㄧ', pinyin: 'i', example: '一 yī (one)' },
-            { symbol: 'ㄨ', pinyin: 'u', example: '五 wǔ (five)' },
-            { symbol: 'ㄩ', pinyin: 'ü', example: '雨 yǔ (rain)' },
+            { symbol: 'ㄚ', pinyin: 'a', example: '啊 a (ah)', origin: '丫', originFrom: '丫 yā', originDesc: 'From 丫 (fork/branch)' },
+            { symbol: 'ㄛ', pinyin: 'o', example: '哦 ó (oh)', origin: '呵', originFrom: '呵 ō', originDesc: 'Reverse of 丂, from 呵' },
+            { symbol: 'ㄜ', pinyin: 'e', example: '餓 è (hungry)', origin: 'ㄛ+stroke', originFrom: '— (modified)', originDesc: 'Modified from ㄛ (added 1920)' },
+            { symbol: 'ㄝ', pinyin: 'ê', example: '耶 yē (yeah)', origin: '也', originFrom: '也 yě', originDesc: 'Ancient form of 也 (also)' },
+            { symbol: 'ㄞ', pinyin: 'ai', example: '愛 ài (love)', origin: '亥', originFrom: '亥 hài', originDesc: 'Variant of 亥 (12th branch)' },
+            { symbol: 'ㄟ', pinyin: 'ei', example: '杯 bēi (cup)', origin: '乁', originFrom: '乁 yí', originDesc: 'From 乁 (to go against)' },
+            { symbol: 'ㄠ', pinyin: 'ao', example: '好 hǎo (good)', origin: '幺', originFrom: '幺 yāo', originDesc: 'From 幺 (tiny/small)' },
+            { symbol: 'ㄡ', pinyin: 'ou', example: '走 zǒu (walk)', origin: '又', originFrom: '又 yòu', originDesc: 'From 又 (right hand)' },
+            { symbol: 'ㄢ', pinyin: 'an', example: '安 ān (peace)', origin: '囗+一', originFrom: '含 hán', originDesc: 'From 含 (to contain)' },
+            { symbol: 'ㄣ', pinyin: 'en', example: '人 rén (person)', origin: '乚', originFrom: '隱 yǐn', originDesc: 'From 乚, part of 隱 (hide)' },
+            { symbol: 'ㄤ', pinyin: 'ang', example: '忙 máng (busy)', origin: '尢', originFrom: '尢 wāng', originDesc: 'From 尢 (lame/crooked)' },
+            { symbol: 'ㄥ', pinyin: 'eng', example: '風 fēng (wind)', origin: '肱', originFrom: '肱 gōng', originDesc: 'From 肱 (upper arm)' },
+            { symbol: 'ㄦ', pinyin: 'er', example: '二 èr (two)', origin: '兒', originFrom: '兒 ér', originDesc: 'Simplified from 兒 (child)' },
+            { symbol: 'ㄧ', pinyin: 'i', example: '一 yī (one)', origin: '一', originFrom: '一 yī', originDesc: 'From 一 (one)' },
+            { symbol: 'ㄨ', pinyin: 'u', example: '五 wǔ (five)', origin: '五', originFrom: '五 wǔ', originDesc: 'Ancient form of 五 (five)' },
+            { symbol: 'ㄩ', pinyin: 'ü', example: '雨 yǔ (rain)', origin: '凵', originFrom: '曲 qǔ', originDesc: 'From 凵, part of 曲 (bent)' },
         ];
 
         const tones = [
@@ -684,7 +725,11 @@
             data.forEach((item, i) => {
                 const cell = document.createElement('div');
                 cell.className = 'chart-cell';
-                cell.innerHTML = `<span class="zhuyin">${item.symbol}</span><span class="romanization">${item.pinyin}</span>`;
+                let html = `<span class="zhuyin">${item.symbol}</span><span class="romanization">${item.pinyin}</span>`;
+                if (item.origin) {
+                    html += `<span class="origin-tooltip"><span class="origin-char">${item.origin}</span>${item.originDesc}</span>`;
+                }
+                cell.innerHTML = html;
                 cell.addEventListener('click', () => {
                     cell.classList.add('playing');
                     speak(item.symbol);

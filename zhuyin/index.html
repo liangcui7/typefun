@@ -2,8 +2,17 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>台灣注音學習 - Learn Taiwanese Zhuyin (Bopomofo)</title>
+    <meta name="description" content="Learn Taiwanese Zhuyin (Bopomofo) with interactive charts, practice, and quizzes">
+    <meta name="theme-color" content="#764ba2">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="注音學習">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="apple-touch-icon" href="icon-192.svg">
+    <link rel="manifest" href="manifest.json">
     <style>
         * {
             margin: 0;
@@ -336,6 +345,108 @@
             color: #f44336;
         }
 
+        /* Words View */
+        .words-category-title {
+            font-size: 1.1rem;
+            color: #764ba2;
+            margin: 24px 0 12px;
+            padding-bottom: 6px;
+            border-bottom: 2px solid #ede5ff;
+        }
+
+        .words-category-title:first-child {
+            margin-top: 0;
+        }
+
+        .words-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .word-card {
+            background: #f8f5ff;
+            border: 2px solid #e8e0f5;
+            border-radius: 14px;
+            padding: 14px 18px;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+            text-align: center;
+        }
+
+        .word-card:hover {
+            background: #ede5ff;
+            border-color: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(118, 75, 162, 0.2);
+        }
+
+        .word-card.playing {
+            background: #764ba2;
+            border-color: #764ba2;
+        }
+
+        .word-card.playing .word-chars {
+            color: white;
+        }
+
+        .word-card.playing rt {
+            color: rgba(255,255,255,0.85);
+        }
+
+        .word-card.playing .word-meaning {
+            color: rgba(255,255,255,0.75);
+        }
+
+        .word-chars {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #333;
+            line-height: 1.8;
+        }
+
+        .word-chars ruby {
+            ruby-position: over;
+        }
+
+        .word-chars rt {
+            font-size: 0.5em;
+            font-weight: normal;
+            color: #764ba2;
+        }
+
+        .word-meaning {
+            font-size: 0.75rem;
+            color: #888;
+            margin-top: 4px;
+        }
+
+        .words-filter {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .words-filter-btn {
+            padding: 6px 14px;
+            border: 2px solid #e8e0f5;
+            border-radius: 18px;
+            background: white;
+            color: #764ba2;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .words-filter-btn.active {
+            background: #764ba2;
+            color: white;
+            border-color: #764ba2;
+        }
+
         @media (max-width: 600px) {
             .chart-grid {
                 grid-template-columns: repeat(auto-fill, minmax(58px, 1fr));
@@ -366,6 +477,7 @@
         <div class="tabs">
             <button class="tab-btn active" data-tab="chart">注音表 Chart</button>
             <button class="tab-btn" data-tab="practice">練習 Practice</button>
+            <button class="tab-btn" data-tab="words">詞語 Words</button>
             <button class="tab-btn" data-tab="quiz">測驗 Quiz</button>
         </div>
 
@@ -395,6 +507,14 @@
                     <button class="nav-btn" id="next-btn" title="Next">&#9654;</button>
                 </div>
                 <div class="practice-counter" id="practice-counter"></div>
+            </div>
+        </div>
+
+        <!-- Words Tab -->
+        <div id="tab-words" class="tab-content">
+            <div class="card">
+                <div class="words-filter" id="words-filter"></div>
+                <div id="words-container"></div>
             </div>
         </div>
 
@@ -637,6 +757,214 @@
 
         document.getElementById('next-quiz-btn').addEventListener('click', newQuizQuestion);
         newQuizQuestion();
+
+        // Common words with zhuyin annotations
+        const wordData = [
+            { cat: '問候 Greetings', words: [
+                { w: '你好', c: [{h:'你',z:'ㄋㄧˇ'},{h:'好',z:'ㄏㄠˇ'}], m: 'hello' },
+                { w: '謝謝', c: [{h:'謝',z:'ㄒㄧㄝˋ'},{h:'謝',z:'ㄒㄧㄝˋ'}], m: 'thank you' },
+                { w: '早安', c: [{h:'早',z:'ㄗㄠˇ'},{h:'安',z:'ㄢ'}], m: 'good morning' },
+                { w: '晚安', c: [{h:'晚',z:'ㄨㄢˇ'},{h:'安',z:'ㄢ'}], m: 'good night' },
+                { w: '再見', c: [{h:'再',z:'ㄗㄞˋ'},{h:'見',z:'ㄐㄧㄢˋ'}], m: 'goodbye' },
+                { w: '請問', c: [{h:'請',z:'ㄑㄧㄥˇ'},{h:'問',z:'ㄨㄣˋ'}], m: 'excuse me' },
+                { w: '對不起', c: [{h:'對',z:'ㄉㄨㄟˋ'},{h:'不',z:'ㄅㄨˋ'},{h:'起',z:'ㄑㄧˇ'}], m: 'sorry' },
+                { w: '沒關係', c: [{h:'沒',z:'ㄇㄟˊ'},{h:'關',z:'ㄍㄨㄢ'},{h:'係',z:'ㄒㄧˋ'}], m: "it's OK" },
+            ]},
+            { cat: '家人 Family', words: [
+                { w: '爸爸', c: [{h:'爸',z:'ㄅㄚˋ'},{h:'爸',z:'ㄅㄚ'}], m: 'dad' },
+                { w: '媽媽', c: [{h:'媽',z:'ㄇㄚ'},{h:'媽',z:'ㄇㄚ'}], m: 'mom' },
+                { w: '哥哥', c: [{h:'哥',z:'ㄍㄜ'},{h:'哥',z:'ㄍㄜ'}], m: 'older brother' },
+                { w: '姐姐', c: [{h:'姐',z:'ㄐㄧㄝˇ'},{h:'姐',z:'ㄐㄧㄝ'}], m: 'older sister' },
+                { w: '弟弟', c: [{h:'弟',z:'ㄉㄧˋ'},{h:'弟',z:'ㄉㄧ'}], m: 'younger brother' },
+                { w: '妹妹', c: [{h:'妹',z:'ㄇㄟˋ'},{h:'妹',z:'ㄇㄟ'}], m: 'younger sister' },
+                { w: '爺爺', c: [{h:'爺',z:'ㄧㄝˊ'},{h:'爺',z:'ㄧㄝ'}], m: 'grandpa (paternal)' },
+                { w: '奶奶', c: [{h:'奶',z:'ㄋㄞˇ'},{h:'奶',z:'ㄋㄞ'}], m: 'grandma (paternal)' },
+                { w: '兒子', c: [{h:'兒',z:'ㄦˊ'},{h:'子',z:'ㄗˇ'}], m: 'son' },
+                { w: '女兒', c: [{h:'女',z:'ㄋㄩˇ'},{h:'兒',z:'ㄦˊ'}], m: 'daughter' },
+                { w: '朋友', c: [{h:'朋',z:'ㄆㄥˊ'},{h:'友',z:'ㄧㄡˇ'}], m: 'friend' },
+            ]},
+            { cat: '學校 School', words: [
+                { w: '老師', c: [{h:'老',z:'ㄌㄠˇ'},{h:'師',z:'ㄕ'}], m: 'teacher' },
+                { w: '學生', c: [{h:'學',z:'ㄒㄩㄝˊ'},{h:'生',z:'ㄕㄥ'}], m: 'student' },
+                { w: '同學', c: [{h:'同',z:'ㄊㄨㄥˊ'},{h:'學',z:'ㄒㄩㄝˊ'}], m: 'classmate' },
+                { w: '學校', c: [{h:'學',z:'ㄒㄩㄝˊ'},{h:'校',z:'ㄒㄧㄠˋ'}], m: 'school' },
+                { w: '考試', c: [{h:'考',z:'ㄎㄠˇ'},{h:'試',z:'ㄕˋ'}], m: 'exam' },
+                { w: '看書', c: [{h:'看',z:'ㄎㄢˋ'},{h:'書',z:'ㄕㄨ'}], m: 'read a book' },
+                { w: '寫字', c: [{h:'寫',z:'ㄒㄧㄝˇ'},{h:'字',z:'ㄗˋ'}], m: 'write' },
+                { w: '功課', c: [{h:'功',z:'ㄍㄨㄥ'},{h:'課',z:'ㄎㄜˋ'}], m: 'homework' },
+            ]},
+            { cat: '時間 Time', words: [
+                { w: '今天', c: [{h:'今',z:'ㄐㄧㄣ'},{h:'天',z:'ㄊㄧㄢ'}], m: 'today' },
+                { w: '明天', c: [{h:'明',z:'ㄇㄧㄥˊ'},{h:'天',z:'ㄊㄧㄢ'}], m: 'tomorrow' },
+                { w: '昨天', c: [{h:'昨',z:'ㄗㄨㄛˊ'},{h:'天',z:'ㄊㄧㄢ'}], m: 'yesterday' },
+                { w: '現在', c: [{h:'現',z:'ㄒㄧㄢˋ'},{h:'在',z:'ㄗㄞˋ'}], m: 'now' },
+                { w: '時間', c: [{h:'時',z:'ㄕˊ'},{h:'間',z:'ㄐㄧㄢ'}], m: 'time' },
+                { w: '早上', c: [{h:'早',z:'ㄗㄠˇ'},{h:'上',z:'ㄕㄤˋ'}], m: 'morning' },
+                { w: '下午', c: [{h:'下',z:'ㄒㄧㄚˋ'},{h:'午',z:'ㄨˇ'}], m: 'afternoon' },
+                { w: '晚上', c: [{h:'晚',z:'ㄨㄢˇ'},{h:'上',z:'ㄕㄤˋ'}], m: 'evening' },
+                { w: '星期', c: [{h:'星',z:'ㄒㄧㄥ'},{h:'期',z:'ㄑㄧˊ'}], m: 'week' },
+            ]},
+            { cat: '食物 Food & Drink', words: [
+                { w: '吃飯', c: [{h:'吃',z:'ㄔ'},{h:'飯',z:'ㄈㄢˋ'}], m: 'eat (a meal)' },
+                { w: '喝水', c: [{h:'喝',z:'ㄏㄜ'},{h:'水',z:'ㄕㄨㄟˇ'}], m: 'drink water' },
+                { w: '牛肉', c: [{h:'牛',z:'ㄋㄧㄡˊ'},{h:'肉',z:'ㄖㄡˋ'}], m: 'beef' },
+                { w: '雞蛋', c: [{h:'雞',z:'ㄐㄧ'},{h:'蛋',z:'ㄉㄢˋ'}], m: 'egg' },
+                { w: '米飯', c: [{h:'米',z:'ㄇㄧˇ'},{h:'飯',z:'ㄈㄢˋ'}], m: 'rice' },
+                { w: '茶', c: [{h:'茶',z:'ㄔㄚˊ'}], m: 'tea' },
+                { w: '咖啡', c: [{h:'咖',z:'ㄎㄚ'},{h:'啡',z:'ㄈㄟ'}], m: 'coffee' },
+                { w: '水果', c: [{h:'水',z:'ㄕㄨㄟˇ'},{h:'果',z:'ㄍㄨㄛˇ'}], m: 'fruit' },
+                { w: '蔬菜', c: [{h:'蔬',z:'ㄕㄨ'},{h:'菜',z:'ㄘㄞˋ'}], m: 'vegetables' },
+                { w: '麵包', c: [{h:'麵',z:'ㄇㄧㄢˋ'},{h:'包',z:'ㄅㄠ'}], m: 'bread' },
+                { w: '餐廳', c: [{h:'餐',z:'ㄘㄢ'},{h:'廳',z:'ㄊㄧㄥ'}], m: 'restaurant' },
+            ]},
+            { cat: '地方 Places', words: [
+                { w: '台灣', c: [{h:'台',z:'ㄊㄞˊ'},{h:'灣',z:'ㄨㄢ'}], m: 'Taiwan' },
+                { w: '中國', c: [{h:'中',z:'ㄓㄨㄥ'},{h:'國',z:'ㄍㄨㄛˊ'}], m: 'China' },
+                { w: '日本', c: [{h:'日',z:'ㄖˋ'},{h:'本',z:'ㄅㄣˇ'}], m: 'Japan' },
+                { w: '美國', c: [{h:'美',z:'ㄇㄟˇ'},{h:'國',z:'ㄍㄨㄛˊ'}], m: 'USA' },
+                { w: '機場', c: [{h:'機',z:'ㄐㄧ'},{h:'場',z:'ㄔㄤˊ'}], m: 'airport' },
+                { w: '醫院', c: [{h:'醫',z:'ㄧ'},{h:'院',z:'ㄩㄢˋ'}], m: 'hospital' },
+                { w: '花園', c: [{h:'花',z:'ㄏㄨㄚ'},{h:'園',z:'ㄩㄢˊ'}], m: 'garden' },
+            ]},
+            { cat: '動作 Actions', words: [
+                { w: '說話', c: [{h:'說',z:'ㄕㄨㄛ'},{h:'話',z:'ㄏㄨㄚˋ'}], m: 'speak' },
+                { w: '走路', c: [{h:'走',z:'ㄗㄡˇ'},{h:'路',z:'ㄌㄨˋ'}], m: 'walk' },
+                { w: '跑步', c: [{h:'跑',z:'ㄆㄠˇ'},{h:'步',z:'ㄅㄨˋ'}], m: 'run' },
+                { w: '睡覺', c: [{h:'睡',z:'ㄕㄨㄟˋ'},{h:'覺',z:'ㄐㄧㄠˋ'}], m: 'sleep' },
+                { w: '工作', c: [{h:'工',z:'ㄍㄨㄥ'},{h:'作',z:'ㄗㄨㄛˋ'}], m: 'work' },
+                { w: '買東西', c: [{h:'買',z:'ㄇㄞˇ'},{h:'東',z:'ㄉㄨㄥ'},{h:'西',z:'ㄒㄧ'}], m: 'go shopping' },
+                { w: '唱歌', c: [{h:'唱',z:'ㄔㄤˋ'},{h:'歌',z:'ㄍㄜ'}], m: 'sing' },
+                { w: '跳舞', c: [{h:'跳',z:'ㄊㄧㄠˋ'},{h:'舞',z:'ㄨˇ'}], m: 'dance' },
+                { w: '游泳', c: [{h:'游',z:'ㄧㄡˊ'},{h:'泳',z:'ㄩㄥˇ'}], m: 'swim' },
+                { w: '開車', c: [{h:'開',z:'ㄎㄞ'},{h:'車',z:'ㄔㄜ'}], m: 'drive' },
+                { w: '上班', c: [{h:'上',z:'ㄕㄤˋ'},{h:'班',z:'ㄅㄢ'}], m: 'go to work' },
+                { w: '回家', c: [{h:'回',z:'ㄏㄨㄟˊ'},{h:'家',z:'ㄐㄧㄚ'}], m: 'go home' },
+                { w: '打電話', c: [{h:'打',z:'ㄉㄚˇ'},{h:'電',z:'ㄉㄧㄢˋ'},{h:'話',z:'ㄏㄨㄚˋ'}], m: 'make a phone call' },
+                { w: '知道', c: [{h:'知',z:'ㄓ'},{h:'道',z:'ㄉㄠˋ'}], m: 'know' },
+                { w: '注意', c: [{h:'注',z:'ㄓㄨˋ'},{h:'意',z:'ㄧˋ'}], m: 'pay attention' },
+            ]},
+            { cat: '自然 Nature', words: [
+                { w: '下雨', c: [{h:'下',z:'ㄒㄧㄚˋ'},{h:'雨',z:'ㄩˇ'}], m: 'rain' },
+                { w: '春天', c: [{h:'春',z:'ㄔㄨㄣ'},{h:'天',z:'ㄊㄧㄢ'}], m: 'spring' },
+                { w: '秋天', c: [{h:'秋',z:'ㄑㄧㄡ'},{h:'天',z:'ㄊㄧㄢ'}], m: 'autumn' },
+                { w: '太陽', c: [{h:'太',z:'ㄊㄞˋ'},{h:'陽',z:'ㄧㄤˊ'}], m: 'sun' },
+                { w: '風景', c: [{h:'風',z:'ㄈㄥ'},{h:'景',z:'ㄐㄧㄥˇ'}], m: 'scenery' },
+                { w: '草地', c: [{h:'草',z:'ㄘㄠˇ'},{h:'地',z:'ㄉㄧˋ'}], m: 'grassland' },
+            ]},
+            { cat: '形容詞 Adjectives', words: [
+                { w: '快樂', c: [{h:'快',z:'ㄎㄨㄞˋ'},{h:'樂',z:'ㄌㄜˋ'}], m: 'happy' },
+                { w: '漂亮', c: [{h:'漂',z:'ㄆㄧㄠˋ'},{h:'亮',z:'ㄌㄧㄤˋ'}], m: 'beautiful' },
+                { w: '認真', c: [{h:'認',z:'ㄖㄣˋ'},{h:'真',z:'ㄓㄣ'}], m: 'serious' },
+                { w: '安全', c: [{h:'安',z:'ㄢ'},{h:'全',z:'ㄑㄩㄢˊ'}], m: 'safe' },
+                { w: '熱鬧', c: [{h:'熱',z:'ㄖㄜˋ'},{h:'鬧',z:'ㄋㄠˋ'}], m: 'lively' },
+                { w: '聰明', c: [{h:'聰',z:'ㄘㄨㄥ'},{h:'明',z:'ㄇㄧㄥˊ'}], m: 'smart' },
+                { w: '高興', c: [{h:'高',z:'ㄍㄠ'},{h:'興',z:'ㄒㄧㄥˋ'}], m: 'glad' },
+                { w: '便宜', c: [{h:'便',z:'ㄆㄧㄢˊ'},{h:'宜',z:'ㄧˊ'}], m: 'cheap' },
+                { w: '旁邊', c: [{h:'旁',z:'ㄆㄤˊ'},{h:'邊',z:'ㄅㄧㄢ'}], m: 'next to' },
+            ]},
+            { cat: '日常 Daily Life', words: [
+                { w: '電腦', c: [{h:'電',z:'ㄉㄧㄢˋ'},{h:'腦',z:'ㄋㄠˇ'}], m: 'computer' },
+                { w: '手機', c: [{h:'手',z:'ㄕㄡˇ'},{h:'機',z:'ㄐㄧ'}], m: 'phone' },
+                { w: '公車', c: [{h:'公',z:'ㄍㄨㄥ'},{h:'車',z:'ㄔㄜ'}], m: 'bus' },
+                { w: '火車', c: [{h:'火',z:'ㄏㄨㄛˇ'},{h:'車',z:'ㄔㄜ'}], m: 'train' },
+                { w: '飛機', c: [{h:'飛',z:'ㄈㄟ'},{h:'機',z:'ㄐㄧ'}], m: 'airplane' },
+                { w: '名字', c: [{h:'名',z:'ㄇㄧㄥˊ'},{h:'字',z:'ㄗˋ'}], m: 'name' },
+                { w: '國語', c: [{h:'國',z:'ㄍㄨㄛˊ'},{h:'語',z:'ㄩˇ'}], m: 'Mandarin' },
+                { w: '中文', c: [{h:'中',z:'ㄓㄨㄥ'},{h:'文',z:'ㄨㄣˊ'}], m: 'Chinese' },
+                { w: '耳朵', c: [{h:'耳',z:'ㄦˇ'},{h:'朵',z:'ㄉㄨㄛˇ'}], m: 'ear' },
+                { w: '大人', c: [{h:'大',z:'ㄉㄚˋ'},{h:'人',z:'ㄖㄣˊ'}], m: 'adult' },
+                { w: '錢', c: [{h:'錢',z:'ㄑㄧㄢˊ'}], m: 'money' },
+                { w: '顏色', c: [{h:'顏',z:'ㄧㄢˊ'},{h:'色',z:'ㄙㄜˋ'}], m: 'color' },
+                { w: '廁所', c: [{h:'廁',z:'ㄘㄜˋ'},{h:'所',z:'ㄙㄨㄛˇ'}], m: 'restroom' },
+                { w: '送禮', c: [{h:'送',z:'ㄙㄨㄥˋ'},{h:'禮',z:'ㄌㄧˇ'}], m: 'give a gift' },
+            ]},
+            { cat: '數字 Numbers', words: [
+                { w: '一百', c: [{h:'一',z:'ㄧ'},{h:'百',z:'ㄅㄞˇ'}], m: 'one hundred' },
+                { w: '兩個', c: [{h:'兩',z:'ㄌㄧㄤˇ'},{h:'個',z:'ㄍㄜˋ'}], m: 'two (of something)' },
+                { w: '三十', c: [{h:'三',z:'ㄙㄢ'},{h:'十',z:'ㄕˊ'}], m: 'thirty' },
+                { w: '四月', c: [{h:'四',z:'ㄙˋ'},{h:'月',z:'ㄩㄝˋ'}], m: 'April' },
+                { w: '多少', c: [{h:'多',z:'ㄉㄨㄛ'},{h:'少',z:'ㄕㄠˇ'}], m: 'how much' },
+                { w: '第一', c: [{h:'第',z:'ㄉㄧˋ'},{h:'一',z:'ㄧ'}], m: 'first' },
+                { w: '幾歲', c: [{h:'幾',z:'ㄐㄧˇ'},{h:'歲',z:'ㄙㄨㄟˋ'}], m: 'how old' },
+                { w: '二十', c: [{h:'二',z:'ㄦˋ'},{h:'十',z:'ㄕˊ'}], m: 'twenty' },
+                { w: '兒歌', c: [{h:'兒',z:'ㄦˊ'},{h:'歌',z:'ㄍㄜ'}], m: "children's song" },
+            ]},
+        ];
+
+        // Build words view
+        const wordsFilterContainer = document.getElementById('words-filter');
+        const wordsContainer = document.getElementById('words-container');
+        let activeWordCategory = 'all';
+
+        function buildWordsFilter() {
+            const allBtn = document.createElement('button');
+            allBtn.className = 'words-filter-btn active';
+            allBtn.textContent = '全部 All';
+            allBtn.addEventListener('click', () => filterWords('all'));
+            wordsFilterContainer.appendChild(allBtn);
+
+            wordData.forEach(cat => {
+                const btn = document.createElement('button');
+                btn.className = 'words-filter-btn';
+                btn.textContent = cat.cat.split(' ')[0];
+                btn.addEventListener('click', () => filterWords(cat.cat));
+                wordsFilterContainer.appendChild(btn);
+            });
+        }
+
+        function filterWords(cat) {
+            activeWordCategory = cat;
+            wordsFilterContainer.querySelectorAll('.words-filter-btn').forEach((b, i) => {
+                b.classList.toggle('active', (cat === 'all' && i === 0) || b.textContent === cat.split(' ')[0]);
+            });
+            renderWords();
+        }
+
+        function renderWords() {
+            wordsContainer.innerHTML = '';
+            const categories = activeWordCategory === 'all' ? wordData : wordData.filter(c => c.cat === activeWordCategory);
+
+            categories.forEach(cat => {
+                const title = document.createElement('div');
+                title.className = 'words-category-title';
+                title.textContent = cat.cat;
+                wordsContainer.appendChild(title);
+
+                const grid = document.createElement('div');
+                grid.className = 'words-grid';
+
+                cat.words.forEach(word => {
+                    const card = document.createElement('div');
+                    card.className = 'word-card';
+
+                    const chars = document.createElement('div');
+                    chars.className = 'word-chars';
+                    chars.innerHTML = word.c.map(ch =>
+                        `<ruby>${ch.h}<rt>${ch.z}</rt></ruby>`
+                    ).join('');
+
+                    const meaning = document.createElement('div');
+                    meaning.className = 'word-meaning';
+                    meaning.textContent = word.m;
+
+                    card.appendChild(chars);
+                    card.appendChild(meaning);
+
+                    card.addEventListener('click', () => {
+                        card.classList.add('playing');
+                        speak(word.w);
+                        setTimeout(() => card.classList.remove('playing'), 800);
+                    });
+
+                    grid.appendChild(card);
+                });
+
+                wordsContainer.appendChild(grid);
+            });
+        }
+
+        buildWordsFilter();
+        renderWords();
 
         // Keyboard navigation for practice
         document.addEventListener('keydown', (e) => {
